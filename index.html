@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link
+		href="https://fonts.googleapis.com/css2?family=Red+Hat+Text:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300&display=swap"
+		rel="stylesheet">
+	<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+	<link rel="stylesheet/less" type="text/css" href="index.less" />
+	<script src="https://kit.fontawesome.com/91ab8bdecc.js" crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/less@4"></script>
+	<script>less.watch();</script>
+
+	<script src="./libs/jquery.js" defer>	</script>
+	<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js" defer></script>
+
+	<script src="./libs/underscore-esm.js" defer>	</script>
+	<script src="./libs/backbone.js" defer>	</script>
+	<script data-main="index.js" src="https://requirejs.org/docs/release/2.3.6/minified/require.js" defer></script>
+	<title>Document</title>
+</head>
+
+<body>
+	<nav>
+		<ul id="navbar">
+			<li id="logo" type="none">
+				Expenser
+			</li>
+
+		</ul>
+	</nav>
+
+
+	<div id="sidebar-right">
+
+	</div>
+	<div id="overlay">
+	</div>
+	<div class="app">
+
+
+
+		<!-- <div id="dashboard">
+			<span>You are all Settled Up</span>
+			<i class="fa-solid fa-thumbs-up"></i>
+		</div> -->
+
+
+	</div>
+	<script type="text/template" id="member-adder-template">
+		<div id="add-member-card">
+			<div class="header">
+				<span>Add Member</span>
+				<i id="add-member-card-close" class="fa-solid fa-circle-xmark"></i>
+			</div>
+			<div id="form">
+				<div class="input-field">
+					<span class="label">Admin</span>
+					<select class="js-example-basic-single" style="width: 50%;" name="admin">
+						<%memberList.forEach((member) =>{
+					%>		
+					<option value=<%=member%>><%=member%></option>		
+
+					<%	}) %>
+									 
+					 
+					</select>
+				</div>
+				<div id="participant-manager">
+					<div>
+						<span class="header-participant">Add Participants</span>
+
+					</div>
+					<div id="participant-box">
+						<div class="boxed" id="members">
+
+
+							<% memberList.forEach((e)=>{ %>
+								<div class="friend-list-friend">
+									<i class="fa-solid fa-user"></i>
+									<span>
+										<%= e%>
+									</span>
+									<i id="remove-friend-btn" class="fa-solid fa-circle-minus"></i>
+
+								</div>
+								<%}) %>
+						</div>
+						<div class="boxed" id="friend-list">
+							<div class="search-bar">
+								<i class="fa-solid fa-magnifying-glass"></i>
+								<input type="text" id="search-bar-input">
+							</div>
+							<div class="added-friends">
+								<% friendList.forEach((e)=>{ %>
+									<div class="friend-list-friend">
+										<i class="fa-solid fa-user"></i>
+										<span>
+											<%= e%>
+										</span>
+										<i id="add-friend-btn" class="fa-solid fa-circle-plus"></i>
+									</div>
+									<%})%>
+							</div>
+						</div>
+					</div>
+				</div>
+				<button id="add-member-btn">Add</button>
+			</div>
+
+		</div>
+	</script>
+	<script type="text/template" id="friends-card-template">
+		<div id="friends">
+			<div class="header">
+				<span>Friends</span>
+			</div>			
+			<div id="friend-list-global">
+				<%friends.map((friend) =>{
+					%>					
+					<div class="friend-list-friend">
+						<i class="fa-solid fa-user"></i>
+						<span>
+						<%= friend%>
+						</span>
+					 
+					</div>
+				<%}) %>
+			</div>
+		</div>
+	</script>
+	<script type="text/template" id="navbar-user-template">
+		<li id="user" type="none">
+			<div class="header">
+				<i class="fa-solid fa-user"></i><span>Gagan</span>
+				<i class="fa-solid fa-arrow-right-from-bracket"> </i>
+			</div>
+
+		</li>
+	</script>
+	<script type="text/template" id="sidebar-template">
+		<div id="sidebar">
+			<div class="options">
+				<span>
+					Dashboard
+				</span>
+			</div>
+			<div class="options">
+				<span><i class="fa-solid fa-caret-down"></i>Groups</span>
+			</div>
+			<div id="groups-box">
+				<div id="group-list">
+				</div>
+				<div class="add-group" id="add-group"><i class="fa-solid fa-square-plus"></i><span>Add Group</span></div>
+	
+			</div>
+		</div>
+	</script>
+	<script type="text/template" id="add-group-card-template">
+
+		<div id="add-group-card">
+			<div class="header">
+				<span>Add New Group</span>
+				<i id="add-expense-card-close" class="fa-solid fa-circle-xmark"></i>
+			</div>
+			<div id="form">
+				<div class="input-field">
+					<span class="label">Group Name</span>
+					<input class="input" id="title" value=<%=title %>> 
+				</div>
+				<div class="input-field">
+					<span class="label">Group Description</span>
+					<input class="input" id="description" value=<%=description %> >
+				</div>
+				<button id="add-group-btn" >Create</button>
+			</div>			
+		</div>
+	</script>
+	<script type="text/template" id="group-balance-template">
+		<div id="group-balance">
+			<div class="header">
+				<span>Group Balance</span>
+			</div>
+			<div class="balance-container">
+				<table>
+					<tbody>
+					
+				<% transactions.forEach((tr) =>{
+					%>
+					<tr class="transaction">
+						<td class="party ower">
+							<i class="fa-solid fa-user"></i>
+							<span>
+								<%= tr.ower %>
+							</span>
+						</td>
+						<td class="owes">OWES</td>
+						<td class="amount">
+							<%=tr.amount %>
+						</td>
+						<td class="owes">TO</td>
+						<td class="party lender">
+							<i class="fa-solid fa-user"></i>
+							<span>
+								 <%= tr.lender %>
+							</span>
+						</td>
+					</tr>
+				<%})%>
+			</tbody>
+		    </table>			 
+				 			</div>
+							 
+		</div>
+	</script>
+	<script type="text/template" id="settle-payment-template">
+		<div id="settle-payment">
+			<div class="header">
+				<span>Settle Payment</span>
+				<i id="add-expense-card-close" class="fa-solid fa-circle-xmark"></i>
+			</div>
+			<div id="form">
+				<div class="input-field">
+					<span class="label">Group Name</span>
+					<input class="input" value=<%=name %> />
+				</div>
+				<div class="input-field">
+					<span class="label">Paying To</span>
+					<select class="input"  id="receiver"> 
+						<% statements.forEach((stat) =>
+						{
+							%>
+							<option value=<%=stat.lender%> > <%= stat.lender%> </option> 
+						<%}) %>
+						
+					</select>
+				 
+				</div>
+				<div class="input-field">
+					<span class="label">Amount due</span>
+					<input id="expense-amount" class="input" type="text" disabled value=<%=amount %> /> 
+				</div>
+				<div class="col">
+					<div>
+						<div id="settle-transaction">
+							<div><i class="fa-solid fa-user"></i><span><%= payer %></span></div>
+							<div><i class="fa-solid fa-user"></i><span><%= receiver %></span></div>
+
+						</div>
+					</div>
+					<input type="text" class="settle-input" value=<%= amount%> >
+					<button id="settle-payment-btn" >Settle</button>
+				</div>
+
+			</div>
+		</div>
+	</script>
+	<script type="text/template" id="add-expense-card-template">
+		<div id="add-expense-card">
+			<div class="header">
+				<span>Add Expense</span>
+				<i id="add-expense-card-close" class="fa-solid fa-circle-xmark"></i>
+			</div>
+			<div id="form">
+				<div class="input-field">
+					<span class="label">Expense Name</span>
+					<input class="input" value=<%= name %> </span>
+				</div>
+				<div class="input-field">
+					<span class="label">Amount</span>
+					<input id="expense-amount" class="input" type="number"  value=<%= amount %> >  </span>
+				</div>
+				<div class="input-field">
+					<span class="label">Owner</span>
+					
+					<select class="js-example-basic-single" style="width: 50%;" name="owner">
+						<%record.map((rc) =>rc.name).forEach((friend) =>{
+					%>		
+					<option value=<%=friend%>><%=friend%></option>		
+
+					<%	}) %>
+									 
+					 
+					</select>
+				</div>
+				<div id="participant-manager">
+					<div>
+						<span class="header-participant">Add Participants</span>
+						<div id="distributor-switch">
+							<span>Divide Equally</span> 
+							<input type="checkbox" id="switch" >
+							<label class="slider" for="switch"></label>
+						</div>
+					</div>
+					<div id="participant-box">
+						<div class="boxed" id="selected-friends">						
+							
+								
+								<% record.forEach((e) =>{ %>
+							<div class="friend-list-friend">
+								<i class="fa-solid fa-user"></i>
+								<span><%= e.name%></span>
+								<input class="participant-amt" type="number" value=<%= e.amount%> >
+								<i id="remove-friend-btn" class="fa-solid fa-circle-minus"></i>
+
+							</div>
+							<%}) %>
+						</div>
+						<div class="boxed" id="friend-list">
+							<div class="search-bar">
+								<i class="fa-solid fa-magnifying-glass"></i>
+								<input type="text" id="search-bar-input">
+							</div>
+							<div class="added-friends">
+								<% friendList.forEach((e) =>{ %>
+								<div class="friend-list-friend">
+									<i class="fa-solid fa-user"></i>
+									<span><%= e%></span>
+									<i id="add-friend-btn" class="fa-solid fa-circle-plus"></i>
+								</div>
+								<%})%>
+							</div>
+						</div>
+					</div>
+				</div>
+				<button id="add-expense-btn" >Create</button>
+			</div>
+			
+		</div>
+	</script>
+	<script type="text/template" id="group-card-template">
+		<div id="group-card">
+			<div id="operation-view"></div>
+			<div class="header">
+				<i class="fa-solid fa-hashtag"></i><span>
+					<%= title %>
+				</span>
+			</div>
+			<div id="content">
+				<div class='button-container'>
+					<div id="add-expense">
+						<i class="fa-solid fa-square-plus"></i>
+						<span>Add Expense
+						</span>
+					</div> 
+					<div id="add-member">
+						<i class="fa-solid fa-square-plus"></i>
+						<span>Add Member
+						</span>
+					</div> 
+					<div id="settle-payment-card-btn">
+						<i class="fa-solid fa-square-minus"></i>
+						<span>Settle Account
+						</span>
+					</div> 
+
+				</div>
+				
+				<div id="expense-container">
+					 
+				</div>
+
+			</div>
+
+		</div>
+	</script>
+	<script type="text/template" id="expense-template">
+		<div class="expense">
+			<div class="expense-header">
+				 <div class="date-span">
+					<span><%= month%></span>
+					<span><%= date%></span>
+				 </div>
+				 <span class="title"><%= name%></span>
+				 <span class="amt"><%= amount%></span>
+			</div>
+			<div class="expense-content">
+				<% transactions.forEach((e) =>{ %>
+					<div class="transaction"> 
+						<div class="party ower"> 									 
+								<i class="fa-solid fa-user"></i>
+								<span><%= e.ower%></span>
+						</div>
+						<span class="owes">OWES</span>
+							<span class="amount"><%= e.amount%></span>
+						<span class="owes">TO</span>
+						<div class="party lender">
+							<i class="fa-solid fa-user"></i>
+								<span><%= e.lender%></span> 
+							</div>
+					</div>
+				<%})%>
+				
+			</div>
+		 </div>
+	</script>
+	<script type="text/template" id="log-in-template">
+		<div id="log-in">
+			<div class="header">Log In</div>
+			<form method="">
+				<div class="log-in-input">
+					<img src="./components//vectors/person.svg" alt="person"> <input name="email" type="text"
+						placeholder="Email" value=<%= email%>  >
+						<i class="fa-solid fa-circle-exclamation email"></i>
+						<i class="fa-solid fa-circle-check email"></i>
+				</div>
+				<div class="log-in-input">
+					<img src="./components//vectors/https.svg" alt="https">
+					<input name="password" type="password" placeholder="Password" value=<%=password%> >
+					<i class="fa-solid fa-circle-exclamation password"></i>
+						<i class="fa-solid fa-circle-check password"></i>
+				</div>
+				<button class="brand-btn-purple" onclick="return false;" id="log-in-btn">Log In</button>
+				<div class="advisory">
+					<span>New to Us? </span> <a>Sign Up</a>
+				</div>
+			</form>
+		</div>
+		</div>		
+	</script>
+	<script type="text/template" id="groups-list-template">
+		 <i class="fa-solid fa-hashtag"></i> <%= title %>
+	</script>
+	<script type="text/template" id="sign-up-template">
+		<div id="sign-up">
+		<div class="header">Sign Up</div>
+		<form method="">
+			<div class="log-in-input">
+				<img src="./components//vectors/person.svg" alt="person"> <input name="email" type="text"
+					placeholder="Email" value=<%=email%> >
+					<i class="fa-solid fa-circle-exclamation email"></i>
+					<i class="fa-solid fa-circle-check email"></i>
+			</div>
+			<div class="log-in-input">
+				<img src="./components//vectors/https.svg" alt="https">
+				<input name="password" type="password" placeholder="Password">
+				<i class="fa-solid fa-circle-exclamation password"></i>
+				<i class="fa-solid fa-circle-check password"></i>
+			</div>
+			<button class="brand-btn-purple" onclick="return false;" id="sign-up-btn">Sign Up</button>
+			<div class="advisory">
+				<span>Already have an account ?</span> <a>Sign In</a>
+			</div>
+		</form>
+	</div>
+	</script>
+	<script type="text/template" id="li-template">
+ 		 <%= content%>
+	</script>
+	<script type="text/template" id="dashboard-template">
+		 <div id="dashboard">
+			<span>You are all Settled Up</span>
+			<i class="fa-solid fa-thumbs-up"></i>
+		 </div>
+	</script>
+</body>
+
+</html>

@@ -1,0 +1,69 @@
+body {
+  margin: 0px;
+  font-family: 'Red Hat Text';
+  color: #454545;
+  background-color: #F2F2F2;
+}
+body nav {
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid #454545;
+  height: 2.82em;
+  background-color: #FFFFFE;
+}
+body nav #logo {
+  font-family: 'Red Hat Text';
+  font-weight: 700;
+  color: #454545;
+  font-size: 23px;
+  letter-spacing: 0.16em;
+  font-style: normal;
+}
+body .app {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+body .app #log-in {
+  display: flex;
+  flex-direction: column;
+  width: 669px;
+  height: 556px;
+  border-radius: 8px;
+  background: #FFFFFE;
+  box-shadow: rgba(0, 0, 0, 0.25) 1px 1px 5px;
+}
+body .app #log-in .header {
+  position: relative;
+  width: 100%;
+  margin: 5px 27px auto;
+  font-family: 'Red Hat Text';
+  font-weight: 700;
+  color: #454545;
+  font-size: 45px;
+}
+body .app #log-in .header:after {
+  position: absolute;
+  bottom: -10px;
+  left: 0px;
+  content: '';
+  width: 619px;
+  height: 1px;
+  background-color: #454545;
+}
+body .app #log-in form {
+  margin-top: 104px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+body .app #log-in form .log-in-input input {
+  margin-top: 10px;
+  width: 449px;
+  font-size: 21px;
+  outline: none;
+  border: none;
+  border-bottom: solid 5px #B6B6B6;
+}

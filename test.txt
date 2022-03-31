@@ -1,0 +1,57 @@
+	<div id="add-expense-card">
+			<div class="header">
+				<span>Add Expense</span>
+				<i id="add-expense-card-close" class="fa-solid fa-circle-xmark"></i>
+			</div>
+			<div id="form">
+				<div class="input-field">
+					<span class="label">Expense Name</span>
+					<input class="input"></span>
+				</div>
+				<div class="input-field">
+					<span class="label">Amount</span>
+					<input class="input">  </span>
+				</div>
+				<div id="participant-manager">
+					<div>
+						<span>Add Participants</span>
+						<div id="distributor-switch">
+							<span>Divide Equally</span>
+							<input type="checkbox" checked="false" id="switch">
+							<label class="slider" for="switch"></label>
+						</div>
+					</div>
+					<div id="participant-box">
+						<div class="boxed" id="selected-friends">
+							<div class="friend-list-friend" id="self">
+								<i class="fa-solid fa-user"></i>
+								<span>Aditya</span>		
+								<input class="participant-amt" type="text">		 
+
+							</div>
+							<div class="friend-list-friend">
+								<i class="fa-solid fa-user"></i>
+								<span>Aditya</span>
+								<input class="participant-amt" type="text">
+								<i id="remove-friend-btn" class="fa-solid fa-circle-minus"></i>
+
+							</div>
+						</div>
+						<div class="boxed" id="friend-list">
+							<div class="search-bar">
+								<i class="fa-solid fa-magnifying-glass"></i>
+								<input type="text" id="search-bar-input">
+							</div>
+							<div class="added-friends">
+								<div class="friend-list-friend">
+									<i class="fa-solid fa-user"></i>
+									<span>Aditya</span>
+									<i id="add-friend-btn" class="fa-solid fa-circle-plus"></i>
+
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
