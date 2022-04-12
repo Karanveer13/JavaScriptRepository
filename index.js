@@ -21,11 +21,14 @@ require.config({
     sidebar: "components/sidebar",
     friends: "components/friends",
     member_adder: "components/member-adder",
+    global_functions : "components/functions/global_functions",
+    global_models : "components/models/globals",
+    global_views : "components/views/globals"
   },
   shim: {},
 });
 
-require(["navbar", "routers", "groups_list", "sidebar", "friends"], function (
+require(["navbar", "routers", "groups_list", "sidebar", "friends" , "global_functions" , "global_models","global_views"], function (
   NavView,
   AppRouter,
   GroupObject

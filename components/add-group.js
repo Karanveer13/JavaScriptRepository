@@ -3,9 +3,8 @@ define([], function () {
   return (PMS.LoadGroupCreationModel = () => {
     PMS.GroupCreationModel = Backbone.Model.extend({
       defaults: {
-        title: "College Friend",
-        id: 3,
-        description: "Just for college expenses",
+        creator: null,        
+        name: null, 
       },
     });
     PMS.GroupCreationView = Backbone.View.extend({
@@ -24,13 +23,15 @@ define([], function () {
       createGroup: function (e) {
         console.log("creating group");
         console.log(this.model);
+        var temp_group =  new PMS.models.group({
+          name: this.model.get("name"),         
+          creator : PMS.fn.getResourceUri(),
+        });
         PMS.groupsCollection.add(
-          new PMS.GroupModel({
-            title: this.model.get("title"),
-            id: JSON.parse(localStorage.getItem("groups")).length ,
-            active: false,
-          })
-        );
+          temp_group
+        ); 
+        temp_group.save();
+        PMS.groupsCollection.fetch();        
         $("#overlay").hide();
         $("#add-group-card").empty();
         $("#add-group-card").hide();

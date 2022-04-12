@@ -1,18 +1,10 @@
-define(["dummyGroupList", "add_group"], function (groupList, addGroup) {
-  //Group Model
-  console.log(groupList);
+define(["dummyGroupList", "add_group"], function ( addGroup) {
+  //Group Model 
   // groupList.forEach((group) => {
   //   console.log(group);
   // });
-  PMS.GroupModel = Backbone.Model.extend({
-    defaults: {
-      id: 0,
-      title: "",
-      active: false,
-    },
-  });
-  //Group Collection
-  PMS.GroupsCollection = Backbone.Collection.extend({});
+  
+  //Group Collection 
 
   //Instantiating a group
   // var college_friends = new GroupModel({
@@ -27,7 +19,6 @@ define(["dummyGroupList", "add_group"], function (groupList, addGroup) {
   // });
   //View for One Group
   PMS.GroupView = Backbone.View.extend({
-    model: new PMS.GroupModel(),
     tagName: "div",
     className: "groups",
     initialize: function () {
@@ -51,34 +42,23 @@ define(["dummyGroupList", "add_group"], function (groupList, addGroup) {
   });
   //View for All Groups or Group List View
   PMS.GroupsView = Backbone.View.extend({
-    model: new PMS.GroupsCollection(),
+    model: PMS.groupsCollection,
     createGroup: function (e) {
       PMS.LoadGroupCreationModel();
       PMS.groupCreationModel = new PMS.GroupCreationModel({
-        title: "",
-        id: 0,
-        description: "",
+        name : null,
+        creator : null,
       });
       PMS.groupCreationView = new PMS.GroupCreationView({
         model: PMS.groupCreationModel,
       });
-    },
-    addGroupInStorage: function (change) {
-      let groups = JSON.parse(localStorage.getItem("groups"));
-      groups.push({
-        title: change.attributes.title,
-        active: change.attributes.active,
-        id: change.attributes.id,
-      });
-      localStorage.setItem("groups", JSON.stringify(groups));
-    },
+    }, 
     initialize: function () {
       this.model.on(
         "add",
         (change) => {
           console.log("new group added");
-          console.log(change);
-          this.addGroupInStorage(change);
+          console.log(change); 
           this.render();
         },
         this
@@ -86,10 +66,10 @@ define(["dummyGroupList", "add_group"], function (groupList, addGroup) {
       $("#add-group").click(this.createGroup);
       this.render();
     },
-    render: function () {
-      console.log(this.model);
+    render: function () { 
       var self = this;
       this.$el.html(``);
+      console.log(this.model);
       _.each(this.model.toArray(), function (group) {
         self.$el.append(new PMS.GroupView({ model: group }).render().$el);
       });

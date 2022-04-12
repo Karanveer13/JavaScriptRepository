@@ -12,23 +12,23 @@ define([], function () {
     events: {},
     initialize: function () {
       var self = this;
-      PMS.vent.on("friends:refresh", function (members) {
+      PMS.vent.on("friends:refresh", function () {
         console.log("some event was fired");
-        self.model.set("friends", members);
+        self.model = new PMS.FriendsModel({
+          friends: _.pluck(PMS.fn.getCurrentGroupFriends(PMS.fn.getCurrentGroupId()), 'user'),
+        })
+       
         self.render();
       });
       PMS.appRouter.on("route", function (route, params) {
         if (route === "openGroup") {
           console.log("params", params);
-          let members = JSON.parse(localStorage.getItem("groups")).filter(
-            (group) => group.id == params[0]
-          )[0].members;
-          self.model.set("friends", members);
+          
           self.render();
         } else if (route === "dashboard") {
-          let friends = JSON.parse(localStorage.getItem("friends"));
-          self.model.set("friends", friends);
-          self.render();
+          // let friends = JSON.parse(localStorage.getItem("friends"));
+          // self.model.set("friends", friends);
+          // self.render();
         }
         console.log("Different Page: " + route);
       });

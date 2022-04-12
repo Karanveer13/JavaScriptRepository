@@ -127,12 +127,27 @@ body {
     background-color: @brand-sidebar;
     height: 94vh;
     width: 14%;
-
+    overflow-y: auto;
+    overflow-x: hidden;
     #groups-box {
       display: none;
     }
+    #friends-box {
+      .friends:hover {
+        background-color: #ff5252;
+        color: @brand-inverted-font;
+        transform: scale(105%) translate(2.5%, 2%);
+      }
 
-    .add-group {
+      &:active {
+        transform: scale(98%);
+      }
+
+      transition: all 0.2s;
+      display: none;
+    }
+
+    .add-group,.add-friend {
       &:hover {
         background-color: @brand-sidebar-hover;
         color: @brand-inverted-font;
@@ -168,7 +183,7 @@ body {
       .give-font(16px, @brand-sidebar-font, 600);
     }
 
-    #group-list {
+    #group-list,#friends-list {
       user-select: none;
 
       i {
@@ -374,6 +389,163 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
+    //global
+    #add-friend-card {
+      position: absolute;
+      border-radius: 8px;
+      z-index: 4;
+      .header {
+        .give-header(@brand-sidebar-hover,15%,1.6rem,@brand-inverted-font,600);
+        box-sizing: border-box;
+        padding: 0.6em;
+      }
+      #form {
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+        justify-content: flex-start;
+        margin-top: 4em;
+        margin-top: 5em;
+        button {
+          margin-top: 80px;
+          cursor: pointer;
+          .brand-btn-puple(199px, 45px);
+          background-color: @brand-sidebar-hover;
+          &:hover {
+            transform: scale(102%);
+          }
+
+          &:active {
+            transform: scale(97%);
+            background-color: darken(@brand-sidebar-hover, 10%);
+          }
+
+          transition: all 0.2s;
+        }
+        .input-field {
+          margin-top: 0.5em;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          .give-font(16px, none, 600);
+          width: 90%;
+          border-radius: 8px;
+          height: 39px;
+          color: @brand-inverted-font;
+          background-color: @brand-input-bg;
+          padding: 0em 2em;
+
+          .input {
+            .give-font(16px, none, 600);
+            outline: none;
+            border: none;
+            height: 24px;
+            padding-left: 2em;
+            padding-right: 2em;
+            margin-right: 1em;
+            border-radius: 8px;
+            color: @brand-sidebar-font;
+            background-color: #d5ffd9;
+          }
+        }
+      }
+
+      background-color: @brand-navbar;
+      width: 40em;
+      height: auto;
+    }
+    #friend-list {
+      display: flex;
+      justify-content: flex-start;
+      flex-direction: column;
+      align-items: center;
+      background-color: @brand-friend-list;
+      overflow: auto;
+      .search-bar {
+        position: relative;
+
+        i {
+          position: absolute;
+        }
+
+        input {
+          .give-font(15px, @brand-sidebar-font, 500);
+          padding-left: 1.5em;
+          border: none;
+          outline: none;
+          background-color: transparent;
+          border-bottom: 1px solid @brand-sidebar-font;
+        }
+      }
+
+   
+    }
+    .boxed {
+      width: 235px;
+      height: 240px;
+      background-color: #fff;
+      border-radius: 8px;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      overflow: auto;
+    }
+    .added-friends {
+      display: flex;
+      height: 100%;
+      justify-content: flex-start;
+      flex-direction: column;
+      div {
+        max-height: 28px;
+        margin-top: 0.3em;
+      }
+    }
+    .friend-list-friend {
+      color: @brand-inverted-font;
+      width: 205px;
+      height: fit-content;
+      border-radius: 8px;
+      background-color: @brand-green-light;
+      display: flex;
+      justify-content: flex-start;
+
+      span {
+        .give-font(14px, none, 600);
+      }
+
+      i {
+        &:first-child {
+          transform: scale(82%, 76%);
+          padding: 0.3em;
+          margin: 0.1em;
+          margin-left: 0.5em;
+          color: @brand-sidebar-hover;
+          background-color: @brand-inverted-font;
+          border-radius: 50%;
+        }
+
+        &:last-child {
+          &:active {
+            transform: scale(95%);
+            color: darken(@brand-sidebar-hover, 10%);
+          }
+
+          &:hover {
+            transform: scale(112%);
+          }
+
+          margin-left: auto;
+          margin-right: 1em;
+          transform: scale(105%);
+          color: @brand-sidebar-hover;
+          background-color: @brand-inverted-font;
+          border-radius: 50%;
+          
+          margin-top: 0.4em;
+          height: fit-content;
+        }
+      }
+    }
     #add-group-card {
       position: absolute;
       border-radius: 8px;
@@ -538,6 +710,7 @@ body {
           color: @brand-sidebar-font;
           height: fit-content;
           position: relative;
+          padding-inline: 1em;
           .col {
             display: flex;
             flex-direction: column;
@@ -668,7 +841,7 @@ body {
           display: flex;
           flex-direction: column;
           align-items: center;
-          margin-top: 8em;
+          margin-top: 4em;
           color: @brand-sidebar-font;
           #add-expense-btn {
             outline: none;
@@ -685,8 +858,7 @@ body {
             user-select: none;
             position: relative;
 
-            div {
-              height: 40px;
+            .participant-header { 
               display: flex;
               justify-content: space-between;
               align-items: center;
@@ -708,6 +880,7 @@ body {
                   .give-font(11px, @brand-inverted-font, 600);
                   margin-right: 1em;
                   float: left;
+                  padding-top: 2em;
                 }
 
                 input {
@@ -760,59 +933,9 @@ body {
               margin-top: 1em;
               margin-bottom: 1em;
 
-              .boxed {
-                width: 235px;
-                height: 240px;
-                background-color: #fff;
-                border-radius: 8px;
-                display: flex;
-                justify-content: center;
-                align-items: flex-start;
-              }
+            
 
-              .friend-list-friend {
-                color: @brand-inverted-font;
-                width: 205px;
-                height: fit-content;
-                border-radius: 8px;
-                background-color: @brand-green-light;
-                display: flex;
-                justify-content: flex-start;
-
-                span {
-                  .give-font(14px, none, 600);
-                }
-
-                i {
-                  &:first-child {
-                    transform: scale(82%, 76%);
-                    padding: 0.3em;
-                    margin: 0.1em;
-                    margin-left: 0.5em;
-                    color: @brand-sidebar-hover;
-                    background-color: @brand-inverted-font;
-                    border-radius: 50%;
-                  }
-
-                  &:last-child {
-                    &:active {
-                      transform: scale(95%);
-                      color: darken(@brand-sidebar-hover, 10%);
-                    }
-
-                    &:hover {
-                      transform: scale(112%);
-                    }
-
-                    margin-left: auto;
-                    margin-right: 1em;
-                    transform: scale(105%);
-                    color: @brand-sidebar-hover;
-                    background-color: @brand-inverted-font;
-                    border-radius: 50%;
-                  }
-                }
-              }
+             
 
               #selected-friends {
                 background-color: @brand-input-active;
@@ -823,7 +946,7 @@ body {
 
                 .friend-list-friend {
                   margin-top: 0.4em;
-
+                  display: block;
                   input {
                     text-align: center
                       .give-font(12px, @brand-sidebar-font, 700);
@@ -848,41 +971,7 @@ body {
                 }
               }
 
-              #friend-list {
-                display: flex;
-                justify-content: flex-start;
-                flex-direction: column;
-                align-items: center;
-                background-color: @brand-friend-list;
-
-                .search-bar {
-                  position: relative;
-
-                  i {
-                    position: absolute;
-                  }
-
-                  input {
-                    .give-font(15px, @brand-sidebar-font, 500);
-                    padding-left: 1.5em;
-                    border: none;
-                    outline: none;
-                    background-color: transparent;
-                    border-bottom: 1px solid @brand-sidebar-font;
-                  }
-                }
-
-                .added-friends {
-                  display: flex;
-                  height: 100%;
-                  justify-content: flex-start;
-                  flex-direction: column;
-                  div {
-                    max-height: 28px;
-                    margin-top: 0.3em;
-                  }
-                }
-              }
+             
             }
 
             margin-top: 0.56em;
@@ -991,6 +1080,7 @@ body {
                 display: flex;
                 justify-content: center;
                 align-items: flex-start;
+                overflow: auto;
               }
 
               .friend-list-friend {
@@ -1033,6 +1123,8 @@ body {
                     color: @brand-sidebar-hover;
                     background-color: @brand-inverted-font;
                     border-radius: 50%;
+                    margin-top: 0.4em;
+                    height: fit-content;
                   }
                 }
               }
@@ -1139,7 +1231,7 @@ body {
       background-color: #fffffe;
       border-radius: 8px;
       width: 817px;
-      height: 830px;
+      height: 90%;
       position: relative;
 
       #expense-creation-view {
@@ -1165,7 +1257,7 @@ body {
             display: flex;
             flex-direction: column;
             align-items: center;
-            margin-top: 8em;
+            margin-top: 1em;
             color: @brand-sidebar-font;
             #add-expense-btn {
               outline: none;
@@ -1265,6 +1357,7 @@ body {
                   display: flex;
                   justify-content: center;
                   align-items: flex-start;
+                  overflow: auto;
                 }
 
                 .friend-list-friend {
@@ -1307,6 +1400,9 @@ body {
                       color: @brand-sidebar-hover;
                       background-color: @brand-inverted-font;
                       border-radius: 50%;
+                      
+                    margin-top: 0.4em;
+                    height: fit-content;
                     }
                   }
                 }

@@ -20,12 +20,27 @@ define([], function () {
       "input input[name=password]": "checkPassword",
       "click a": "getBackToLogin",
     },
+    createProfile : function(id){
+      fetch(`https://expenser-app-django-heroku.herokuapp.com/profile`,{
+      method : "POST",
+      headers : {
+        "Authorization" : `ApiKey ${localStorage.getItem("expenser-username")}:${localStorage.getItem("expenser-token")}` ,
+        "Content-Type" : "application/json"
+      },
+      body : JSON.stringify({
+        profile_user: `/user/${id}/` 
+      })    
+     })
+     .then((res) => res.json())
+     .then((res))
+    },
+   
     signUp: function () {
       let validity = this.model.get("valid");
-      if (validity.email && validity.password) {
+      if (validity.email || validity.password) {
         let email = this.model.get("email");
         let password = this.model.get("password");
-        fetch("http://127.0.0.1:8000/signup/", {
+        fetch("https://expenser-app-django-heroku.herokuapp.com/signup/", {
           method: "POST",
           mode: "cors",
           headers: {
@@ -48,9 +63,13 @@ define([], function () {
                   alert(`Error : ${data.error}`)
                 }
                 else{
-                  console.log(data);
+                  console.log(data); 
                   localStorage.setItem("expenser-token",data.token);
-                  localStorage.setItem("expenser-user",data.username);
+                  localStorage.setItem("expenser-username",data.username);
+                  localStorage.setItem("expenser-resource_url",`/user/${data.id}/`);
+                  PMS.globals.profile = PMS.globals.profile || new PMS.models.profile();
+                  PMS.globals.profile.set("profile_user",PMS.fn.getResourceUri());
+                  PMS.globals.profile.save({parse : false});
                   Backbone.history.navigate("/dashboard", true);
                 }
               });

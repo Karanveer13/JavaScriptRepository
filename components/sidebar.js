@@ -13,12 +13,26 @@ define([], function () {
     initialize: function () {
       this.render();
       $(".options").click(function (e) {
-        if ($(this).index() === 0) {
-          Backbone.history.navigate("/dashboard", true);
-        } else {
-          $("i").toggleClass("active");
-          $("#groups-box").slideToggle();
+        console.log('index', $(this).index())
+        switch ($(this).index()) {
+          case 0:
+            Backbone.history.navigate("/dashboard", true);
+            break;
+
+          case 1:
+            $(this).find('i').toggleClass("active");
+            $("#groups-box").slideToggle();
+            break;
+
+          case 3:
+            $(this).find('i').toggleClass("active");
+            $("#friends-box").slideToggle();
+            break;
+
+          default:
+            break;
         }
+
       });
     },
     selfRemove: function () {

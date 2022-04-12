@@ -13,16 +13,19 @@
 		rel="stylesheet">
 	<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 	<link rel="stylesheet/less" type="text/css" href="index.less" />
+	<link rel="stylesheet" href="//code.jquery.com/ui/1.13.1/themes/base/jquery-ui.css">
 	<script src="https://kit.fontawesome.com/91ab8bdecc.js" crossorigin="anonymous"></script>
 	<script src="https://cdn.jsdelivr.net/npm/less@4"></script>
-	<script>less.watch();</script>
+	<!-- <script>less.watch();</script> -->
 
 	<script src="./libs/jquery.js" defer>	</script>
 	<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js" defer></script>
-
+	 
 	<script src="./libs/underscore-esm.js" defer>	</script>
 	<script src="./libs/backbone.js" defer>	</script>
+	<script  src="https://code.jquery.com/ui/1.13.1/jquery-ui.js" defer></script>
 	<script data-main="index.js" src="https://requirejs.org/docs/release/2.3.6/minified/require.js" defer></script>
+
 	<title>Document</title>
 </head>
 
@@ -59,19 +62,7 @@
 				<span>Add Member</span>
 				<i id="add-member-card-close" class="fa-solid fa-circle-xmark"></i>
 			</div>
-			<div id="form">
-				<div class="input-field">
-					<span class="label">Admin</span>
-					<select class="js-example-basic-single" style="width: 50%;" name="admin">
-						<%memberList.forEach((member) =>{
-					%>		
-					<option value=<%=member%>><%=member%></option>		
-
-					<%	}) %>
-									 
-					 
-					</select>
-				</div>
+			<div id="form"> 
 				<div id="participant-manager">
 					<div>
 						<span class="header-participant">Add Participants</span>
@@ -79,18 +70,17 @@
 					</div>
 					<div id="participant-box">
 						<div class="boxed" id="members">
-
-
-							<% memberList.forEach((e)=>{ %>
-								<div class="friend-list-friend">
+ 
+							<% memberList.forEach((e)=>{ %> 
+								<div class="friend-list-friend" data-uri=<%= e.resource_uri %> >
 									<i class="fa-solid fa-user"></i>
 									<span>
-										<%= e%>
+										<%= e.username%>
 									</span>
 									<i id="remove-friend-btn" class="fa-solid fa-circle-minus"></i>
 
 								</div>
-								<%}) %>
+							<%}) %>
 						</div>
 						<div class="boxed" id="friend-list">
 							<div class="search-bar">
@@ -98,11 +88,12 @@
 								<input type="text" id="search-bar-input">
 							</div>
 							<div class="added-friends">
-								<% friendList.forEach((e)=>{ %>
-									<div class="friend-list-friend">
+							    
+								<% friendList.forEach((e)=>{ %> 
+									<div class="friend-list-friend" data-uri=<%=e.resource_uri %>>
 										<i class="fa-solid fa-user"></i>
 										<span>
-											<%= e%>
+											<%= e.username%>
 										</span>
 										<i id="add-friend-btn" class="fa-solid fa-circle-plus"></i>
 									</div>
@@ -127,7 +118,7 @@
 					<div class="friend-list-friend">
 						<i class="fa-solid fa-user"></i>
 						<span>
-						<%= friend%>
+						<%= friend.username%>
 						</span>
 					 
 					</div>
@@ -138,7 +129,7 @@
 	<script type="text/template" id="navbar-user-template">
 		<li id="user" type="none">
 			<div class="header">
-				<i class="fa-solid fa-user"></i><span>Gagan</span>
+				<i class="fa-solid fa-user"></i><span><%= PMS.fn.getUsername()%></span>
 				<i class="fa-solid fa-arrow-right-from-bracket"> </i>
 			</div>
 
@@ -160,6 +151,45 @@
 				<div class="add-group" id="add-group"><i class="fa-solid fa-square-plus"></i><span>Add Group</span></div>
 	
 			</div>
+			<div class="options">
+				<span><i class="fa-solid fa-caret-down"></i>Friends</span>
+			</div>
+			<div id="friends-box" >
+				<div id="friends-list">
+
+				</div>
+				<div class="add-friend" id="add-friend"> <i class="fa-solid fa-square-plus"></i><span>Add Friend</span></div>
+			</div>
+		</div>
+	</script>
+	<script type="text/template" id="add-friend-card-template">
+		<div id="add-friend-card">
+			<div class="header">
+				<span>Add Friend</span>
+				<i id="add-expense-card-close" class="fa-solid fa-circle-xmark"></i>
+			</div>
+			<div id="form">			 
+				<div class="boxed" id="friend-list">
+					<div class="search-bar">
+						<i class="fa-solid fa-magnifying-glass"></i>
+						<input type="text" id="search-bar-input">
+					</div>
+					<div class="added-friends">
+						
+						<% this.model.forEach((e)=>{ %>
+						 
+							<div class="friend-list-friend" >
+								<i class="fa-solid fa-user"></i>
+								<span>
+									<%= e.get('username')%>
+								</span>
+								<i id="add-friend-btn"  data-resource_uri=<%=e.get('resource_uri') %> class="fa-solid fa-circle-plus"></i>
+							</div>
+							<%})%>
+					</div>
+				</div>
+				<button id="add-friend-btn" >Add</button>
+			</div>			
 		</div>
 	</script>
 	<script type="text/template" id="add-group-card-template">
@@ -172,12 +202,9 @@
 			<div id="form">
 				<div class="input-field">
 					<span class="label">Group Name</span>
-					<input class="input" id="title" value=<%=title %>> 
+					<input class="input" id="name" value=<%=name %>> 
 				</div>
-				<div class="input-field">
-					<span class="label">Group Description</span>
-					<input class="input" id="description" value=<%=description %> >
-				</div>
+			 
 				<button id="add-group-btn" >Create</button>
 			</div>			
 		</div>
@@ -270,7 +297,7 @@
 			<div id="form">
 				<div class="input-field">
 					<span class="label">Expense Name</span>
-					<input class="input" value=<%= name %> </span>
+					<input class="input" id="expense-name" value=<%= name %> </span>
 				</div>
 				<div class="input-field">
 					<span class="label">Amount</span>
@@ -280,9 +307,9 @@
 					<span class="label">Owner</span>
 					
 					<select class="js-example-basic-single" style="width: 50%;" name="owner">
-						<%record.map((rc) =>rc.name).forEach((friend) =>{
+						<%record.forEach((friend) =>{
 					%>		
-					<option value=<%=friend%>><%=friend%></option>		
+					<option value=<%=friend.resource_uri%>><%=friend.username%></option>		
 
 					<%	}) %>
 									 
@@ -290,7 +317,7 @@
 					</select>
 				</div>
 				<div id="participant-manager">
-					<div>
+					<div class='participant-header'>
 						<span class="header-participant">Add Participants</span>
 						<div id="distributor-switch">
 							<span>Divide Equally</span> 
@@ -305,9 +332,9 @@
 								<% record.forEach((e) =>{ %>
 							<div class="friend-list-friend">
 								<i class="fa-solid fa-user"></i>
-								<span><%= e.name%></span>
+								<span><%= e.username%></span>
 								<input class="participant-amt" type="number" value=<%= e.amount%> >
-								<i id="remove-friend-btn" class="fa-solid fa-circle-minus"></i>
+								<i id="remove-friend-btn" class="fa-solid fa-circle-minus" data-resource_uri=<%=e.resource_uri%> ></i>
 
 							</div>
 							<%}) %>
@@ -321,8 +348,8 @@
 								<% friendList.forEach((e) =>{ %>
 								<div class="friend-list-friend">
 									<i class="fa-solid fa-user"></i>
-									<span><%= e%></span>
-									<i id="add-friend-btn" class="fa-solid fa-circle-plus"></i>
+									<span><%= e.username%></span>
+									<i id="add-friend-btn" class="fa-solid fa-circle-plus" data-resource_uri=<%=e.resource_uri%>></i>
 								</div>
 								<%})%>
 							</div>
@@ -339,7 +366,7 @@
 			<div id="operation-view"></div>
 			<div class="header">
 				<i class="fa-solid fa-hashtag"></i><span>
-					<%= title %>
+					<%= name %>
 				</span>
 			</div>
 			<div id="content">
@@ -371,17 +398,39 @@
 		</div>
 	</script>
 	<script type="text/template" id="expense-template">
-		<div class="expense">
+		<div class="expense" data-group_id=<%=group %>>
 			<div class="expense-header">
 				 <div class="date-span">
-					<span><%= month%></span>
-					<span><%= date%></span>
+					<span> <%=new Date(created_at).getDate()%> </span>
+					<span> <%=PMS.constants.MONTHNAMES[new Date(created_at).getMonth()]%> </span>
 				 </div>
-				 <span class="title"><%= name%></span>
+				 <span class="title"><%= reason%></span>
 				 <span class="amt"><%= amount%></span>
 			</div>
-			<div class="expense-content">
-				<% transactions.forEach((e) =>{ %>
+			<div class="expense-content">			 
+			<% splitters.forEach((e) =>{ %>
+				<%console.log('e_splitter',e)%>
+				<%console.log(PMS.globals.group_friends.where({resource_uri : e.e_splitter}))%>
+					<div class="transaction"> 
+						<div class="party ower"> 									 
+								<i class="fa-solid fa-user"></i>
+								<span><%= e.e_splitter.friend.user.username%></span>
+						</div>
+						<span class="owes">OWES</span> 
+							<span class="amount"><%=e.owes%></span>
+						<span class="owes">TO</span>
+						<div class="party lender">
+							<i class="fa-solid fa-user"></i>
+								<span><%= PMS.globals.group_friends.where({resource_uri : payer}).length ?  PMS.globals.group_friends.where({resource_uri : payer})[0].attributes.friend.user.username : payer+"/"+"not_found"%></span> 
+							</div>
+					</div>
+			<%})%>
+			</div>
+		 </div>
+	</script>
+
+
+	<!-- <% splitters.forEach((e) =>{ %>
 					<div class="transaction"> 
 						<div class="party ower"> 									 
 								<i class="fa-solid fa-user"></i>
@@ -395,11 +444,7 @@
 								<span><%= e.lender%></span> 
 							</div>
 					</div>
-				<%})%>
-				
-			</div>
-		 </div>
-	</script>
+				<%})%> -->
 	<script type="text/template" id="log-in-template">
 		<div id="log-in">
 			<div class="header">Log In</div>
@@ -425,7 +470,10 @@
 		</div>		
 	</script>
 	<script type="text/template" id="groups-list-template">
-		 <i class="fa-solid fa-hashtag"></i> <%= title %>
+		 <i class="fa-solid fa-hashtag"></i> <%= name %>
+	</script>
+	<script type="text/template" id="friends-list-template">
+		 <i class="fa-solid fa-hashtag"></i> <%= user.username %>
 	</script>
 	<script type="text/template" id="sign-up-template">
 		<div id="sign-up">

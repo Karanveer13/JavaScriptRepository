@@ -14,7 +14,7 @@ define([], function () {
     logOut: function (e) {
       console.log("logged out");
       $(e).toggleClass("shocked");
-      $(PMS.friendsView.el).empty();
+     // $(PMS.friendsView.el).empty();
       PMS.sidebarView.selfRemove();
       localStorage.clear();
       Backbone.history.navigate("/logIn", true);
@@ -22,7 +22,7 @@ define([], function () {
     },
     initialize: function () {
       if (localStorage.getItem("expenser-token")) {
-        this.model.set("name", localStorage.getItem("expenser-name"));
+        this.model.set("name", localStorage.getItem("expenser-username"));
         this.render();
       }
     },

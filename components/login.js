@@ -44,12 +44,13 @@ define([], function () {
         this.model.set("valid", { ...this.model.get("valid"), email: true });
       }
     },
+
     verifyCreds: function () {
       let validity = this.model.get("valid");
-      if (validity.email && validity.password) {
+      if (true) {
         let email = this.model.get("email");
         let password = this.model.get("password");
-        fetch("http://127.0.0.1:8000/signin/", {
+        fetch("https://expenser-app-django-heroku.herokuapp.com/signin/", {
           method: "POST",
           mode: "cors",
           headers: {
@@ -71,7 +72,10 @@ define([], function () {
                 } else {
                   console.log(data);
                   localStorage.setItem("expenser-token", data.token);
-                  localStorage.setItem("expenser-user", data.username);
+                  localStorage.setItem("expenser-username", data.username);
+                  localStorage.setItem("expenser-resource_url", `/user/${data.id}/`);
+                  PMS.globals.profile = new PMS.models.profile();
+                  PMS.globals.profile.fetch()
                   Backbone.history.navigate("/dashboard", true);
                 }
               });
@@ -84,7 +88,7 @@ define([], function () {
       }
     },
     openDashboard: function () {
-      console.log("opening dashboard");     
+      console.log("opening dashboard");
       Backbone.history.navigate("/dashboard", true);
     },
     initialize: function () {
