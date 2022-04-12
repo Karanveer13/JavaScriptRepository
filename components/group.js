@@ -25,6 +25,7 @@ define([
     tagName: "div",
     initialize: function () {
       this.template = _.template($("#group-card-template").html());
+
     },
     handle: new _.extend({}, Backbone.Events),
     events: {
@@ -48,9 +49,9 @@ define([
           }
         }),
         friendList: _.map(_.reject(PMS.globals.profile_friends.models, function (friend) {
-          console.log('friend',friend);
+          console.log('friend', friend);
           return (_.contains(_.pluck(PMS.fn.getCurrentGroupFriends(), 'resource_uri'), friend.get('resource_uri')));
-        }), function (friend) { return { resource_uri: friend.get('resource_uri'), username: friend.attributes.user.username ?? ""} }),
+        }), function (friend) { return { resource_uri: friend.get('resource_uri'), username: friend.attributes.user.username ?? "" } }),
 
 
       });
@@ -79,14 +80,21 @@ define([
     settlePayment: function (e) {
       e.preventDefault();
       console.log("settle Payment card");
+      
+      var currentReceiver = PMS.groupBalanceModel.attributes.transactions.filter((transaction) => transaction.ower == PMS.fn.getUsername()).length ? PMS.groupBalanceModel.attributes.transactions.filter((transaction) => transaction.ower == PMS.fn.getUsername())[0] : {}; 
       var settlement_info = new settlePayment.model({
-        name: "College Friends",
-        amount: 0,
-        payer: "Gagan",
-        receiver: "",
+        name: PMS.groupsCollection.where({resource_uri : `/group/${PMS.fn.getCurrentGroupId()}/`})[0].attributes.name,
+        amount: PMS.groupBalanceModel.attributes.transactions.filter((transaction) => transaction.ower == PMS.fn.getUsername()).length ? PMS.groupBalanceModel.attributes.transactions.filter((transaction) => transaction.ower == PMS.fn.getUsername())[0].amount : 0,
+        payer: PMS.fn.getUsername(),
+        currentReceiver : currentReceiver === {} ? {} : {
+          lender : currentReceiver.lender,
+          lender_profile : currentReceiver.lender_profile,
+          amount : currentReceiver.amount,
+        },
+        receivers: _.filter(PMS.groupBalanceModel.attributes.transactions, (transaction) => transaction.ower === PMS.fn.getUsername()),
         //statements: [...PMS.GroupBalanceStatement.filter((stat) => true)],
         statements: [
-         // ...PMS.GroupBalanceStatement.filter((stat) => stat.ower === "Gagan"),
+          // ...PMS.GroupBalanceStatement.filter((stat) => stat.ower === "Gagan"),
         ],
       });
       var view = new settlePayment.view({
@@ -122,22 +130,7 @@ define([
       //  // PMS.ExpenseCreationView.unbindAll();
       // });
     },
-    renderGroupBalance: function () {
-      PMS.LoadGroupBalance();
-
-      PMS.groupBalanceModel = new PMS.GroupBalanceModel({
-        transactions: [
-          {
-            ower: "Aditya",
-            lender: "Gagan",
-            amount: 0,
-          },
-        ],
-      });
-      PMS.groupBalanceView = new PMS.GroupBalanceView({
-        model: PMS.groupBalanceModel,
-      }).render();
-    },
+   
     renderExpenses: function () {
 
       _.map(PMS.globals.expenses.models, (expense) => {
@@ -157,18 +150,19 @@ define([
       //   }
       // });
     },
+
     render: function () {
       this.$el.html("");
       this.$el.html(this.template(this.model.toJSON()));
       PMS.LoadExpense();
 
-      PMS.expenseCollectionView = PMS.expenseCollectionView ||  new PMS.ExpenseCollectionView({
+      PMS.expenseCollectionView = PMS.expenseCollectionView || new PMS.ExpenseCollectionView({
         model: PMS.globals.expenses,
-      
+
       });
       console.log(2, PMS.expenseCollection);
-      //this.renderExpenses();
-      this.renderGroupBalance();
+
+
       return this;
     },
   });

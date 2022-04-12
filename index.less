@@ -261,9 +261,10 @@ body {
     #friends {
       position: absolute;
       right: 38px;
-      top: 85px;
+      top: 10vh;
       width: 268px;
-      height: fit-content;
+      height: 30vh;
+      overflow: auto;
       background-color: #fffffe;
       border-radius: 8px;
 
@@ -273,7 +274,8 @@ body {
         display: flex;
         justify-content: flex-start;
         align-items: center;
-
+        position: sticky;
+        z-index: 3;
         span {
           padding-left: 2em;
           line-height: 2.5;
@@ -286,8 +288,7 @@ body {
         border-top-left-radius: 8px;
         border-top-right-radius: 8px;
       }
-      #friend-list-global {
-        margin-top: 2em;
+      #friend-list-global { 
         padding: 1em;
         box-sizing: border-box;
         .col-flex();
@@ -295,7 +296,7 @@ body {
         .friend-list-friend {
           margin-top: 0.5em;
           color: @brand-inverted-font;
-          width: 70%;
+          width: 90%;
           height: fit-content;
           border-radius: 8px;
           background-color: @brand-green-light;
@@ -617,7 +618,7 @@ body {
       border-radius: 8px;
       position: absolute;
       right: 35px;
-      bottom: 405px;
+      bottom: 6vh;
       .header {
         height: 10%;
         padding: 0.4em;
@@ -686,7 +687,7 @@ body {
       height: 100%;
       display: none;
       #settle-payment {
-        top: 12%;
+        top: 2%;
         left: 12%;
         position: absolute;
         z-index: 3;
@@ -826,7 +827,7 @@ body {
         width: 616px;
       }
       #add-expense-card {
-        top: 12%;
+        top: 3%;
         left: 12%;
         position: absolute;
         z-index: 2;
@@ -1243,7 +1244,7 @@ body {
         display: none;
 
         #add-expense-card {
-          top: 12%;
+          top: 3%;
           left: 12%;
           position: absolute;
           z-index: 3;
@@ -1533,9 +1534,10 @@ body {
 
         #expense-container {
           margin-top: 2em;
-          max-height: 35em;
+          max-height: 25em; 
+          height: 70%;
           overflow-y: auto;
-          overflow-x: hidden;
+    overflow-x: clip;
           .expense {
             margin-top: 2em;
             width: 36vw;

@@ -80,6 +80,7 @@ define([
 
 
                 PMS.groupView = PMS.groupView || new PMS.view.GroupView();
+                
                 console.log(PMS.groupsCollection.models);
                 PMS.vent.trigger("friends:refresh");
                 _.map(PMS.groupsCollection.models, function (group) {

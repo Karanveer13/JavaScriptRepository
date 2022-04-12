@@ -40,6 +40,7 @@ PMS.views.friendsView = Backbone.View.extend({
     model: PMS.globals.profile_friends,
     addFriends: function () {
         console.log('add friends called');
+        PMS.globals.public_users.models =  PMS.globals.public_users.models.filter((user) => PMS.globals.profile_friends.models.filter((model) => model.attributes.user.resource_uri == user.attributes.resource_uri).length < 1)
         PMS.globals.addFriends = PMS.globals.addFriends || new PMS.views.addFriends({ model: PMS.globals.public_users });
     },
     initialize: function () {
@@ -58,8 +59,7 @@ PMS.views.friendsView = Backbone.View.extend({
         var self = this;
         this.$el.html(``);
         _.each(this.model.toArray(), function (friend) {
-            console.log(friend);
-            self.$el.append(new PMS.views.friendView({ model: friend }).render().$el)
+             self.$el.append(new PMS.views.friendView({ model: friend }).render().$el)
         });
         return;
     }

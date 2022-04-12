@@ -52,14 +52,22 @@ define([], function () {
       model: PMS.globals.expenses.models,
       el: $("#expense-container"),
       initialize: function () {
-        this.model.on(
-          "add",
-          () => {
-            console.log("changed");
-            this.render();
-          },
-          this
-        );
+        var self = this;
+       
+        _.bindAll(this, 'render', 'afterRender');
+        var _this = this;
+        this.render = _.wrap(this.render, function (render) {
+          render();
+          _this.afterRender();
+
+        });
+
+
+      },
+
+      afterRender: function () {
+        console.log('afterRender');
+        PMS.fn.renderGroupBalance();
       },
       render: function () {
         var self = this;
@@ -74,6 +82,7 @@ define([], function () {
           }
 
         });
+        return this;
       },
     });
   });

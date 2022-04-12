@@ -1,30 +1,13 @@
-fetch("https://expenser-app-django-heroku.herokuapp.com/expense/49/", {
-    "headers": {        
-        "authorization": "ApiKey gb2002@gmail.com:dfdb72b8aeb9ffe251d727826f889ccbab0c38a1",
-        "content-type": "application/json",
- 
-    },
-  
-    body: JSON.stringify({
-        settled_by: [{
-            "friend": {
-                "id": 50,
-                "p_friend": {
-                    "resource_uri": "/user/98/",
-                    "username": "sushant"
-                },
-                "profile": "/profile/38/",
-                "resource_uri": "/profile_friend/50/",
-            },
-            "group": "/group/23/",
-            "id": 20,
-            "resource_uri": "/group_friend/20/"
-           
-        }]
-    }),
-    "method": "PUT",
-    "mode": "cors",
-    "credentials": "include"
-})
-    .then((res) => res.json())
-    .then((res) => console.log(res));
+PMS.globals.expenses.models.map((expense) => {
+    expense.attributes.splitters.map((splitter) => {
+        if (splitter.e_splitter.friend.user.username === PMS.fn.getUsername() && expense.attributes.payer.friend.user.username !== PMS.fn.getUsername()) {
+            console.log(`${splitter.e_splitter.friend.user.username} owes ${splitter.owes} ${expense.attributes.payer.friend.user.username}`)
+            console.log(`${splitter.e_splitter.resource_uri} owes ${splitter.owes} ${expense.attributes.payer.resource_uri} in ${expense.attributes.resource_uri}`);
+            if (!_.contains(expense.attributes.payer.friend.profile, expense.attributes.settled_by)) {
+                expense.attributes.settled_by.push(PMS.globals.profile.attributes.resource_uri);
+                expense.save();
+            }
+        }
+    })
+
+});

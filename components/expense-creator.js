@@ -123,110 +123,8 @@ define(["expense"], function (expense) {
           },
         ]);
       });
-    },
-    renderGroupBalance: function () {
-      PMS.GroupBalanceData = PMS.GroupBalanceData || {};
-      PMS.GroupBalanceData.members = [
-        {
-          name: "Aditya Raj",
-          accounts: [],
-        },
-        {
-          name: "Gagan",
-          accounts: [],
-        },
-        {
-          name: "Karanveer",
-          accounts: [],
-        },
-      ];
-      PMS.expenseCollection.models.forEach((elm) => {
-        console.log(elm.attributes);
-        PMS.GroupBalanceData.members.forEach((member) => {
-          if (elm.attributes.owner !== member.name) {
-            elm.attributes.transactions.forEach((trans) => {
-              if (member.name === trans.ower) {
-                if (member.accounts.find((acc) => acc.name === trans.lender)) {
-                  let ref = member.accounts.find(
-                    (acc) => acc.name === trans.lender
-                  );
-                  ref.amount = parseInt(ref.amount) + parseInt(trans.amount);
-                } else {
-                  member.accounts = [
-                    ...member.accounts,
-                    {
-                      name: trans.lender,
-                      amount: parseInt(trans.amount),
-                    },
-                  ];
-                }
-              }
-            });
-          }
-        });
-      });
-      PMS.GroupBalanceData.members.forEach((member) => {
-        let otherMembers = PMS.GroupBalanceData.members.filter(
-          (_member) => _member.name !== member.name
-        );
-        member.accounts.forEach((account) => {
-          otherMembers.forEach((_member) => {
-            if (_member.name === account.name) {
-              _member.accounts.forEach((_account) => {
-                if (_account.name === member.name) {
-                  // let otherAccount = new Object.assign(_account);
-                  if (account.amount > _account.amount) {
-                    account.amount =
-                      parseInt(account.amount) - parseInt(_account.amount);
-                    _account.amount = 0;
-                  } else {
-                    _account.amount =
-                      parseInt(_account.amount) - parseInt(account.amount);
-                    account.amount = 0;
-                  }
-                }
-              });
-            }
-          });
-        });
-      });
-      PMS.LoadGroupBalance();
-      console.log(PMS.GroupBalanceData);
-      PMS.GroupBalanceStatement = [];
-      PMS.GroupBalanceData.members.map((member) => {
-        member.accounts.forEach((account) => {
-          PMS.GroupBalanceStatement.push({
-            lender: account.name,
-            ower: member.name,
-            amount: account.amount,
-          });
-        });
-      });
-      PMS.groupBalanceModel = new PMS.GroupBalanceModel({
-        transactions: PMS.GroupBalanceStatement.filter((li) => li.amount > 0),
-        // transaction: PMS.GroupBalanceData.members.map((member) => ({
-        //   lender: "Gagan",
-        //   amount: member.accounts[0].amount,
-        //   ower: member.accounts[0].name,
-        // })),
-      });
-      PMS.groupBalanceView = new PMS.GroupBalanceView({
-        model: PMS.groupBalanceModel,
-      }).render();
-    },
-    addExpenseToStorage: function (expense) {
-      let groups = JSON.parse(localStorage.getItem("groups"));
-      groups.forEach((group) => {
-        if (group.id == Backbone.history.location.hash.split("/")[1]) {
-          if (group.hasOwnProperty("expenses")) {
-            group.expenses.push(expense);
-          } else {
-            group.expenses = [expense];
-          }
-        }
-      });
-      localStorage.setItem("groups", JSON.stringify(groups));
-    },
+    }, 
+     
     addExpense: function (e) {
       e.preventDefault();
       console.log(this.model);
@@ -238,8 +136,8 @@ define(["expense"], function (expense) {
           console.log(res.objects.find((friend) => friend.friend.resource_uri === self.model.get('owner')));
 
           _.map(self.model.get('record'), function (record) {
-            console.log('record',record);
-            console.log('resource_uri',res.objects.find(function (friend) {
+            console.log('record', record);
+            console.log('resource_uri', res.objects.find(function (friend) {
               return friend.friend.resource_uri === record.resource_uri
             }));
             splitters.push({
@@ -308,7 +206,7 @@ define(["expense"], function (expense) {
       // console.log(7, PMS.expenseCollection);
       // console.log(this.model.attributes);
       // this.addExpenseToStorage(this.model.attributes);
-      // this.renderGroupBalance();
+      PMS.fn.renderGroupBalance();
       // this.close();
     },
 

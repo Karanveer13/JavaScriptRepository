@@ -255,15 +255,15 @@
 			<div id="form">
 				<div class="input-field">
 					<span class="label">Group Name</span>
-					<input class="input" value=<%=name %> />
+					<input class="input" value=<%=name.replaceAll(' ','_') %> >
 				</div>
 				<div class="input-field">
 					<span class="label">Paying To</span>
-					<select class="input"  id="receiver"> 
-						<% statements.forEach((stat) =>
+					<select class="js-example-basic-single" style="width: 30%"  id="receiver-dropdown"> 
+						<% receivers.forEach((receiver) =>
 						{
 							%>
-							<option value=<%=stat.lender%> > <%= stat.lender%> </option> 
+							<option  data-name=<%= receiver.lender%> data-amount="<%=receiver.amount%>" value=<%=receiver.lender_profile%> > <%= receiver.lender%> </option> 
 						<%}) %>
 						
 					</select>
@@ -277,7 +277,7 @@
 					<div>
 						<div id="settle-transaction">
 							<div><i class="fa-solid fa-user"></i><span><%= payer %></span></div>
-							<div><i class="fa-solid fa-user"></i><span><%= receiver %></span></div>
+							<div><i class="fa-solid fa-user"></i><span><%= currentReceiver.lender ?? "" %></span></div>
 
 						</div>
 					</div>
@@ -408,9 +408,8 @@
 				 <span class="amt"><%= amount%></span>
 			</div>
 			<div class="expense-content">			 
-			<% splitters.forEach((e) =>{ %>
-				<%console.log('e_splitter',e)%>
-				<%console.log(PMS.globals.group_friends.where({resource_uri : e.e_splitter}))%>
+			<% splitters.filter((splitter) => payer.friend.user.username !== splitter.e_splitter.friend.user.username).forEach((e) =>{ %>
+			       
 					<div class="transaction"> 
 						<div class="party ower"> 									 
 								<i class="fa-solid fa-user"></i>
@@ -421,7 +420,7 @@
 						<span class="owes">TO</span>
 						<div class="party lender">
 							<i class="fa-solid fa-user"></i>
-								<span><%= PMS.globals.group_friends.where({resource_uri : payer}).length ?  PMS.globals.group_friends.where({resource_uri : payer})[0].attributes.friend.user.username : payer+"/"+"not_found"%></span> 
+								<span><%= payer.friend.user.username%></span> 
 							</div>
 					</div>
 			<%})%>

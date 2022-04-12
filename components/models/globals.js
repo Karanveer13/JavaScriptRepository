@@ -163,4 +163,24 @@ PMS.collections.group_friends = Backbone.Collection.extend({
         return response.objects;
     }, 
     url : 'https://expenser-app-django-heroku.herokuapp.com/group_friend/'
+});
+
+//Settle
+PMS.models.settlement = Backbone.Model.extend({
+    defaults: {
+
+    }
 })
+PMS.collections.settlements = Backbone.Collection.extend({
+    model : PMS.models.settlement,
+    initialize : function()
+    {
+        this.fetch();
+    },
+    parse : function(response)
+    {
+        return response.objects;
+    }, 
+    url : 'https://expenser-app-django-heroku.herokuapp.com/settle/'
+
+});
