@@ -42,6 +42,20 @@ define([], function () {
         // }))) 
         this.template = _.template($("#expense-template").html());
       },
+      events: {
+        'click .expense-header': 'deleteExpense'
+      },
+      deleteExpense: function (e) {
+        console.log('deleting expense', e);
+        console.log(this.model);
+        var answer = window.confirm("Do you want to delete this expense ? => "+ this.model.attributes.reason);
+        if (answer) {
+          this.model.destroy()
+            .then((res) => PMS.expenseCollectionView.render())
+        }
+
+
+      },
       render: function () {
         console.log(this.model);
         this.$el.html(this.template(this.model.toJSON()));
@@ -53,7 +67,7 @@ define([], function () {
       el: $("#expense-container"),
       initialize: function () {
         var self = this;
-       
+
         _.bindAll(this, 'render', 'afterRender');
         var _this = this;
         this.render = _.wrap(this.render, function (render) {

@@ -180,7 +180,7 @@ define([
         model: PMS.globals.profile_friends,
         el: $("#friends-list"),
       });
-
+      PMS.globals.expenses = PMS.globals.expenses || new PMS.collections.expenses();
       // JSON.parse(localStorage.getItem("groups")).map((group) => {
       //   PMS.groupsCollection.add(
       //     new PMS.GroupModel({
@@ -199,7 +199,7 @@ define([
       //     el: $("#group-list"),
       //   });
 
-      return Promise.all([PMS.groupsCollection.fetch()]);
+      return Promise.all([PMS.groupsCollection.fetch(),PMS.globals.expenses.fetch()]);
     },
 
     redirectToLogin: function () {

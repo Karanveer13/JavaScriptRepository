@@ -18,12 +18,12 @@ PMS.fn = {
             "Content-Type": "application/json"
         }
     },
-    addGroupMember: function (member_list, group_id) {
+    saveGroupMember: function (added_friend, removed_friend, group_id) {
         var add_requests = [];
         var remove_requests = [];
         var group = `/group/${group_id}/`;
         var self = this;
-        _.map(member_list, function (member) {
+        _.map(added_friend, function (member) {
 
             add_requests.push(fetch(`https://expenser-app-django-heroku.herokuapp.com/group_friend/`, {
                 method: "POST",
@@ -39,6 +39,15 @@ PMS.fn = {
 
 
         });
+        _.map(removed_friend, function (member) {
+            remove_requests.push(
+                fetch(`https://expenser-app-django-heroku.herokuapp.com${PMS.globals.group_friends.find((friend) => friend.attributes.friend.resource_uri === member.resource_uri).attributes.resource_uri}`, {
+                    method: "DELETE",
+                    headers: PMS.fn.getAuthHeaders(),
+
+                })
+            )
+        })
         return Promise.all([...add_requests, remove_requests]);
     },
     getUsernameFromGroupFriend: function (group_friend) {
@@ -97,17 +106,24 @@ PMS.fn = {
                         //console.log(`${splitter.e_splitter.friend.user.username} owes ${splitter.owes} to ${expense.attributes.payer.friend.user.username}`);
                         if (expense.attributes.payer.friend.resource_uri !== splitter.e_splitter.friend.resource_uri) {
                             if (member.profile_friend === splitter.e_splitter.friend.resource_uri) {
-                                let ref = member.accounts.find((acc) => acc.profile_friend === expense.attributes.payer.friend.resource_uri);
-                                if (ref) {
-                                    ref.amount = ref.amount + splitter.owes;
+                                //checking if this expense is already settled by the user or not
+                                console.log('contains line');
+                                console.log(`!_.contains(${expense.attributes.settled_by},${PMS.globals.group_friends.find((friend) => friend.attributes.friend.resource_uri === member.profile_friend).attributes.resource_uri})`);
+                                console.log(!_.contains(expense.attributes.settled_by, PMS.globals.group_friends.find((friend) => friend.attributes.friend.resource_uri === member.profile_friend).attributes.resource_uri));
+                                if (!_.contains(expense.attributes.settled_by, PMS.globals.group_friends.find((friend) => friend.attributes.friend.resource_uri === member.profile_friend).attributes.resource_uri)) {
+                                    let ref = member.accounts.find((acc) => acc.profile_friend === expense.attributes.payer.friend.resource_uri);
+                                    if (ref) {
+                                        ref.amount = ref.amount + splitter.owes;
+                                    }
+                                    else {
+                                        member.accounts = [...member.accounts, {
+                                            username: expense.attributes.payer.friend.user.username,
+                                            profile_friend: expense.attributes.payer.friend.resource_uri,
+                                            amount: splitter.owes
+                                        }]
+                                    }
                                 }
-                                else {
-                                    member.accounts = [...member.accounts, {
-                                        username: expense.attributes.payer.friend.user.username,
-                                        profile_friend: expense.attributes.payer.friend.resource_uri,
-                                        amount: splitter.owes
-                                    }]
-                                }
+
                             }
                         }
 
@@ -135,9 +151,9 @@ PMS.fn = {
                                 else {
                                     oMemAccount.amount = oMemAccount.amount - account.amount;
                                     console.log(` ${oMemAccount.amount} = ${oMemAccount.amount}- ${account.amount}`)
-                             
+
                                     account.amount = 0;
-                                   
+
                                 }
                             }
                         })
@@ -154,7 +170,7 @@ PMS.fn = {
         PMS.GroupBalanceData.members.map((member) => {
             //console.log(`${member.username} === ${localStorage.getItem('expenser-username')}`)
             member.accounts.map((account) => {
-                if (account.amount > 0 && (member.username === localStorage.getItem('expenser-username') || account.username === localStorage.getItem('expenser-username')) ) {
+                if (account.amount > 0 && (member.username === localStorage.getItem('expenser-username') || account.username === localStorage.getItem('expenser-username'))) {
                     PMS.groupBalanceModel.attributes.transactions.push({
                         ower: member.username,
                         lender: account.username,
@@ -192,7 +208,7 @@ PMS.fn = {
             headers: PMS.fn.getAuthHeaders(),
         });
     },
-    removeGroupMember: function (profile_friend_id) {
+    removeGroupMember: function (removed_friend, profile_friend_id) {
 
         return fetch(`https://expenser-app-django-heroku.herokuapp.com/group_friend/${profile_friend_id}`, {
             method: "DELETE",

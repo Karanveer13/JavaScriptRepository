@@ -19,9 +19,9 @@ define([], function () {
     handleSearch: function (e) {
       console.log('searched', e.target.value);
       console.log(this.model);
-      this.model.set('friendList',this.model.get('original').filter((user) => user.username.toLowerCase().includes(e.target.value.toLowerCase())));
+      this.model.set('friendList', this.model.get('original').filter((user) => user.username.toLowerCase().includes(e.target.value.toLowerCase())));
       this.render();
-  },
+    },
     renderDropDown: function () {
       var owner = "";
       $(".js-example-basic-single").select2({
@@ -39,42 +39,34 @@ define([], function () {
       this.model.set("owner", owner);
     },
     saveData: function () {
+      var self = this;
       var memberList = this.model.get('memberList');
+      var initial_memberList = Array.from(this.model.get('initial_member_list'));
       console.log('memberList');
       console.log(memberList);
-
-      if (memberList.length) {
-        
-          PMS.fn.addGroupMember(memberList, parseInt(Backbone.history.location.hash.split("/")[1]))
-          .then((res) =>
-          {
-            console.log('members_added');
-            PMS.groupsCollection.fetch();
+      console.log('init_state');
+      console.log(initial_memberList);
+      var diff_mem = _.difference(memberList, initial_memberList);
+      var diff_init = _.difference(initial_memberList, memberList);
+      if (diff_mem.length > 0 || diff_init.length > 0) {
+        //need to add new member
+        console.log('member to add', diff_mem);
+        console.log('member to remove', diff_init);
+        PMS.fn.saveGroupMember(diff_mem, diff_init, parseInt(Backbone.history.location.hash.split("/")[1]))
+          .then((res) => {
+            console.log('members_saved');
+            return PMS.groupsCollection.fetch();
           })
-     
+          .then((res) => {
+            console.log('saved member list'); 
+            self.undelegateEvents();
+            self.close();
+            
+          })
       }
       else {
-         
+        console.log('no changes');
       }
-
-      // _.map(memberList,(member) =>
-      // {
-      //   addGroupMember()
-      //   .then((res) => console.log(res));
-      //   member.resource_uri,
-      //   member.username,
-      // })
-      // this.model.set(
-      //   "admin",
-      //   $(".js-example-basic-single").select2("data")[0].id
-      // );
-      // let groups = JSON.parse(localStorage.getItem("groups"));
-      // groups.forEach((group) => {
-      //   if (group.id == Backbone.history.location.hash.split("/")[1]) {
-      //     group.members = this.model.get("memberList");
-      //   }
-      // });
-      // localStorage.setItem("groups", JSON.stringify(groups));
       PMS.vent.trigger("friends:refresh");
     },
     close: function () {
@@ -91,14 +83,17 @@ define([], function () {
     },
     addFriend: function (e) {
       console.log("adding friends");
+
+      let friends = this.model.get("friendList");
+      friends.splice(friends.indexOf(_.findWhere(friends, { resource_uri: e.target.parentElement.dataset.uri })), 1);
+      this.model.set("friendList", friends);
       let members = this.model.get("memberList");
       console.log(e.target);
       console.log(e.target.parentElement.dataset.uri, e.target.previousElementSibling.innerText);
       members.push({ resource_uri: e.target.parentElement.dataset.uri, username: e.target.previousElementSibling.innerText });
       this.model.set("memberList", members);
-      let friends = this.model.get("friendList");
-      friends.splice(friends.indexOf(_.findWhere(friends, { resource_uri: e.target.parentElement.dataset.uri })), 1);
-      this.model.set("friendList", friends);
+      console.log({ resource_uri: e.target.parentElement.dataset.uri, username: e.target.previousElementSibling.innerText });
+      console.log(members);
       this.render();
     },
     removeFriend: function (e) {
@@ -116,24 +111,25 @@ define([], function () {
       this.render();
     },
     initialize: function () {
-      
+
       this.model.bind("change", this.render, this);
       $.fn.setCursorPosition = function (pos) {
         this.each(function (index, elem) {
-            if (elem.setSelectionRange) {
-                elem.setSelectionRange(pos, pos);
-            } else if (elem.createTextRange) {
-                var range = elem.createTextRange();
-                range.collapse(true);
-                range.moveEnd('character', pos);
-                range.moveStart('character', pos);
-                range.select();
-            }
+          if (elem.setSelectionRange) {
+            elem.setSelectionRange(pos, pos);
+          } else if (elem.createTextRange) {
+            var range = elem.createTextRange();
+            range.collapse(true);
+            range.moveEnd('character', pos);
+            range.moveStart('character', pos);
+            range.select();
+          }
         });
         return this;
-    },
-      this.template = _.template($("#member-adder-template").html());
-      this.model.set("original",this.model.get('friendList'));     
+      },
+        this.template = _.template($("#member-adder-template").html());
+      this.model.set("initial_member_list", Array.from(this.model.get('memberList')));
+      this.model.set("original", this.model.get('friendList'));
       this.render();
     },
     render: function () {
@@ -143,7 +139,7 @@ define([], function () {
       this.renderDropDown();
       var self = this;
       $('#search-bar-input').val(searchString);
-      $('#search-bar-input').setCursorPosition(searchString.length);
+      $('#search-bar-input').setCursorPosition(searchString ? searchString.length : 0);
       $('#search-bar-input').focus();
       return this;
     },

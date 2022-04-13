@@ -1,4 +1,5 @@
-
+var PMS = PMS || {};
+PMS.view = PMS.view || {};
 define([
   "friend_list",
   "settlePayment",
@@ -6,7 +7,7 @@ define([
   "member_adder",
   "group_balance",
 ], function (friends, settlePayment, load) {
-  PMS.view = {};  // var expense = {};
+    // var expense = {};
   // expense.collection = Backbone.Collection.extend({});
   // expense.view = Backbone.View.extend({
   //   el: $("#expense-content"),
@@ -72,7 +73,7 @@ define([
       //   (group) => group.id == Backbone.history.location.hash.split("/")[1]
       // )[0].members,
 
-      PMS.memberAdderView = new PMS.MemberAdderView({
+      PMS.memberAdderView = PMS.memberAdderView || new PMS.MemberAdderView({
         model: PMS.memberAdderModel,
         el: $("#operation-view"),
       });

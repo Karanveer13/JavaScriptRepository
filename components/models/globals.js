@@ -116,7 +116,7 @@ PMS.models.expense = Backbone.Model.extend({
 PMS.collections.expenses = Backbone.Collection.extend({
     model: PMS.models.expense,
     initialize: function () {
-        this.fetch();
+        
     },
     parse: function (response, options) {
         console.log(response);
