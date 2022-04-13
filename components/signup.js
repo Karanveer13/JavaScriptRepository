@@ -3,6 +3,9 @@ define([], function () {
     defaults: {
       email: "",
       password: "",
+      username: "",
+      first_name: "",
+      last_name: "",
       valid: {
         email: false,
         password: false,
@@ -18,28 +21,34 @@ define([], function () {
       "click #sign-up-btn": "signUp",
       "input input[name=email]": "checkEmail",
       "input input[name=password]": "checkPassword",
+      "input input[name=first_name]": "handleChange",
+      "input input[name=last_name]": "handleChange",
+      "input input[name=username]": "handleChange",
       "click a": "getBackToLogin",
     },
-    createProfile : function(id){
-      fetch(`https://expenser-app-django-heroku.herokuapp.com/profile`,{
-      method : "POST",
-      headers : {
-        "Authorization" : `ApiKey ${localStorage.getItem("expenser-username")}:${localStorage.getItem("expenser-token")}` ,
-        "Content-Type" : "application/json"
-      },
-      body : JSON.stringify({
-        profile_user: `/user/${id}/` 
-      })    
-     })
-     .then((res) => res.json())
-     .then((res))
+    handleChange: function (e) {
+      this.model.set(e.target.name, e.target.value);
     },
-   
+    createProfile: function (id) {
+      fetch(`https://expenser-app-django-heroku.herokuapp.com/profile`, {
+        method: "POST",
+        headers: PMS.fn.getAuthHeaders(),
+        body: JSON.stringify({
+          profile_user: `/user/${id}/`
+        })
+      })
+        .then((res) => res.json())
+        .then((res))
+    },
+
     signUp: function () {
       let validity = this.model.get("valid");
       if (validity.email || validity.password) {
         let email = this.model.get("email");
         let password = this.model.get("password");
+        let username = this.model.get("username");
+        let first_name = this.model.get("first_name");
+        let last_name = this.model.get("last_name");
         fetch("https://expenser-app-django-heroku.herokuapp.com/signup/", {
           method: "POST",
           mode: "cors",
@@ -48,33 +57,28 @@ define([], function () {
             // 'Content-Type': 'application/x-www-form-urlencoded',
           },
           body: JSON.stringify({
-            username: email,
+            username: username,
             password: password,
+            email: email,
+            first_name: first_name,
+            last_name: last_name,
+
           }),
         })
-          .then((res) => {
-            if (res.status === 404) {
-              alert("there is something wrong");
-            } else {
-              
-              res.json().then((data) => {
-                if(data.hasOwnProperty("error"))
-                {
-                  alert(`Error : ${data.error}`)
-                }
-                else{
-                  console.log(data); 
-                  localStorage.setItem("expenser-token",data.token);
-                  localStorage.setItem("expenser-username",data.username);
-                  localStorage.setItem("expenser-resource_url",`/user/${data.id}/`);
-                  PMS.globals.profile = PMS.globals.profile || new PMS.models.profile();
-                  PMS.globals.profile.set("profile_user",PMS.fn.getResourceUri());
-                  PMS.globals.profile.save({parse : false});
-                  Backbone.history.navigate("/dashboard", true);
-                }
+          .then((res) => res.json())
+          .then((data) => {
+            localStorage.setItem("expenser-token", data.token);
+            localStorage.setItem("expenser-username", data.username);
+            localStorage.setItem("expenser-resource_url", `/user/${data.id}/`);
+            PMS.globals.profile = PMS.globals.profile || new PMS.models.profile();
+            PMS.globals.profile.set("profile_user", PMS.fn.getResourceUri());
+            PMS.globals.profile.save({ parse: false })
+              .then((res) => {
+                PMS.globals.profile.fetch();
               });
-            }
+            Backbone.history.navigate("/dashboard", true);
           })
+
 
           .catch((err) => console.log(err));
       } else {

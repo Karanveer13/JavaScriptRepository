@@ -141,12 +141,13 @@ PMS.fn = {
             let otherMembers = PMS.GroupBalanceData.members.filter((_member) => _member.profile_friend !== member.profile_friend);
             _.map(member.accounts, function (account) {
                 _.map(otherMembers, function (otherMember) {
-                    if (otherMember.profile_friend === account.profile_friend) {
+                    if (otherMember.profile_friend == account.profile_friend) {
                         _.map(otherMember.accounts, function (oMemAccount) {
-                            if (oMemAccount.profile_friend === member.profile_friend) {
+                            if (oMemAccount.profile_friend == member.profile_friend) {
                                 if (account.amount > oMemAccount.amount) {
-                                    account.amount = account.amount - oMemAccount.amount;
                                     console.log(` ${account.amount} = ${account.amount}- ${oMemAccount.amount}`)
+                                    account.amount = account.amount - oMemAccount.amount;
+                                    oMemAccount.amount = 0;
                                 }
                                 else {
                                     oMemAccount.amount = oMemAccount.amount - account.amount;

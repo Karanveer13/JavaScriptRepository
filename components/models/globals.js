@@ -115,6 +115,11 @@ PMS.models.expense = Backbone.Model.extend({
 
 PMS.collections.expenses = Backbone.Collection.extend({
     model: PMS.models.expense,
+    comparator : function(a,b){
+        return b.get('created_at') > a.get('created_at') ? 1 : -1 ;
+      
+    },
+
     initialize: function () {
         
     },

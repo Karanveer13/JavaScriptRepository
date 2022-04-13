@@ -20,10 +20,10 @@
 
 	<script src="./libs/jquery.js" defer>	</script>
 	<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js" defer></script>
-	 
+
 	<script src="./libs/underscore-esm.js" defer>	</script>
 	<script src="./libs/backbone.js" defer>	</script>
-	<script  src="https://code.jquery.com/ui/1.13.1/jquery-ui.js" defer></script>
+	<script src="https://code.jquery.com/ui/1.13.1/jquery-ui.js" defer></script>
 	<script data-main="index.js" src="https://requirejs.org/docs/release/2.3.6/minified/require.js" defer></script>
 
 	<title>Document</title>
@@ -188,7 +188,7 @@
 							<%})%>
 					</div>
 				</div>
-				<button id="add-friend-btn" >Add</button>
+				<button id="save-friend-btn" >Save</button>
 			</div>			
 		</div>
 	</script>
@@ -453,7 +453,7 @@
 						placeholder="Email" value=<%= email%>  >
 						<i class="fa-solid fa-circle-exclamation email"></i>
 						<i class="fa-solid fa-circle-check email"></i>
-				</div>
+				</div>		
 				<div class="log-in-input">
 					<img src="./components//vectors/https.svg" alt="https">
 					<input name="password" type="password" placeholder="Password" value=<%=password%> >
@@ -472,12 +472,31 @@
 		 <i class="fa-solid fa-hashtag"></i> <%= name %>
 	</script>
 	<script type="text/template" id="friends-list-template">
-		 <i class="fa-solid fa-hashtag"></i> <%= user.username %>
+		 <i class="fa-solid fa-hashtag"></i> <%= user ? user.username : "" %>
 	</script>
 	<script type="text/template" id="sign-up-template">
 		<div id="sign-up">
 		<div class="header">Sign Up</div>
 		<form method="">
+			<div class="log-in-input">
+				<img src="./components//vectors/person.svg" alt="person"> <input name="first_name" type="text"
+					placeholder="First Name" value=<%= first_name%>  >
+				
+					<i class="fa-solid fa-circle-check user"></i>
+			</div>
+			<div class="log-in-input">
+				<img src="./components//vectors/person.svg" alt="person"> <input name="last_name" type="text"
+					placeholder="Last Name" value=<%= last_name%>  >
+				 
+					<i class="fa-solid fa-circle-check user"></i>
+			</div>
+			<div class="log-in-input">
+				<img src="./components//vectors/person.svg" alt="person"> <input name="username" type="text"
+					placeholder="username" value=<%= username %>  >
+				 
+					<i class="fa-solid fa-circle-check email"></i>
+			</div>
+		
 			<div class="log-in-input">
 				<img src="./components//vectors/person.svg" alt="person"> <input name="email" type="text"
 					placeholder="Email" value=<%=email%> >

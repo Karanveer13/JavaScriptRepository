@@ -16,6 +16,7 @@ define([], function () {
       $(e).toggleClass("shocked");
      // $(PMS.friendsView.el).empty();
       PMS.sidebarView.selfRemove();
+      PMS.friendsView.$el.empty();
       localStorage.clear();
       Backbone.history.navigate("/logIn", true);
       this.selfRemove();

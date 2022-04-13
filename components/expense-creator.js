@@ -160,7 +160,7 @@ define(["expense"], function (expense) {
             splitters: [],
             created_at: new Date(),
           });
-          _.last(PMS.globals.expenses.models).save()
+          _.first(PMS.globals.expenses.models).save()
             .then(function (res) {
               console.log('saved');
               console.log(res);

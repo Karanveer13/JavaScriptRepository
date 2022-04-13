@@ -40,6 +40,7 @@ define([], function () {
         //       self.model.set('splitter_data',[...splitter_data,expense]);
         //     }
         // }))) 
+
         this.template = _.template($("#expense-template").html());
       },
       events: {
@@ -48,7 +49,7 @@ define([], function () {
       deleteExpense: function (e) {
         console.log('deleting expense', e);
         console.log(this.model);
-        var answer = window.confirm("Do you want to delete this expense ? => "+ this.model.attributes.reason);
+        var answer = window.confirm("Do you want to delete this expense ? => " + this.model.attributes.reason);
         if (answer) {
           this.model.destroy()
             .then((res) => PMS.expenseCollectionView.render())
@@ -59,6 +60,12 @@ define([], function () {
       render: function () {
         console.log(this.model);
         this.$el.html(this.template(this.model.toJSON()));
+        // console.log(this.model.get('reason'),!_.contains(this.model.get('settled_by'), PMS.globals.group_friends.find((friend) => friend.attributes.friend.user.resource_uri === PMS.globals.profile.attributes.profile_user).attributes.resource_uri))
+        // if(!_.contains(this.model.get('settled_by'), PMS.globals.group_friends.find((friend) => friend.attributes.friend.user.resource_uri === PMS.globals.profile.attributes.profile_user).attributes.resource_uri))
+        // {
+         
+        // }
+        //this.$('.expense-header').addClass(!_.contains(this.model.get('settled_by'), PMS.globals.group_friends.find((friend) => friend.attributes.friend.user.resource_uri === PMS.globals.profile.attributes.profile_user).attributes.resource_uri) ? "not_settled" : "settled");
         return this;
       },
     });
@@ -89,6 +96,7 @@ define([], function () {
         _.each(this.model.toArray(), function (expense) {
           console.log(expense);
           if (expense.attributes.group === `/group/${PMS.fn.getCurrentGroupId()}/`) {
+
             self.$el.append(
               new PMS.ExpenseCardView({ model: expense }).render().$el
             );

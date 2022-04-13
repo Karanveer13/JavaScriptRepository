@@ -1602,9 +1602,9 @@ body {
               border-top-left-radius: 8px;
               border-top-right-radius: 8px;
               padding: 0.4em;
-              &.hover
+              &:hover
               {
-                background-color: red;
+                background-color: #ff5252;
               }
               .row-flex();
               justify-content: flex-start;
@@ -1639,6 +1639,9 @@ body {
                   text-align: right;
                   padding-right: 1em;
                 }
+              }
+              &.not_settled{
+                color : green;
               }
             }
           }

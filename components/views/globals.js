@@ -40,7 +40,7 @@ PMS.views.friendsView = Backbone.View.extend({
     model: PMS.globals.profile_friends,
     addFriends: function () {
         console.log('add friends called');
-        PMS.globals.public_users.models =  PMS.globals.public_users.models.filter((user) => PMS.globals.profile_friends.models.filter((model) => model.attributes.user.resource_uri == user.attributes.resource_uri).length < 1)
+        PMS.globals.public_users.models = PMS.globals.public_users.models.filter((user) => PMS.globals.profile_friends.models.filter((model) => model.attributes.user.resource_uri == user.attributes.resource_uri).length < 1)
         PMS.globals.addFriends = PMS.globals.addFriends || new PMS.views.addFriends({ model: PMS.globals.public_users });
     },
     initialize: function () {
@@ -59,7 +59,7 @@ PMS.views.friendsView = Backbone.View.extend({
         var self = this;
         this.$el.html(``);
         _.each(this.model.toArray(), function (friend) {
-             self.$el.append(new PMS.views.friendView({ model: friend }).render().$el)
+            self.$el.append(new PMS.views.friendView({ model: friend }).render().$el)
         });
         return;
     }
@@ -71,6 +71,7 @@ PMS.views.addFriends = Backbone.View.extend({
     events: {
         "click .fa-solid.fa-circle-xmark": "close",
         "click #add-friend-btn": "addFriend",
+        "click #save-friend-btn": "saveFriend",
         "input #search-bar-input": "handleSearch"
     },
     handleSearch: function (e) {
@@ -79,6 +80,10 @@ PMS.views.addFriends = Backbone.View.extend({
         console.log(this.model);
         this.render();
     },
+    saveFriend : function()
+    {
+        this.close();
+    },
     addFriend: function (e) {
         console.log("adding friend");
         console.log(this.model);
@@ -86,11 +91,10 @@ PMS.views.addFriends = Backbone.View.extend({
         PMS.globals.profile_friends.add({
             profile: PMS.globals.profile.get('resource_uri'),
             user: e.target.dataset.resource_uri
-        })
-        _.last(PMS.globals.profile_friends.models).save().then((res) => {
-            console.log('saved');
-            PMS.globals.friendsView.render();
         });
+        PMS.globals.profile_friends.last().save()
+            .then((res) => PMS.globals.profile_friends.fetch())
+            .then((res) => PMS.globals.friendsView.render())
 
         // var temp_group = new PMS.models.group({
         //     name: this.model.get("name"),
@@ -153,7 +157,7 @@ PMS.views.addFriends = Backbone.View.extend({
 
         self.$el.append(self.template(self.model));
         $('#search-bar-input').val(searchString);
-        $('#search-bar-input').setCursorPosition(searchString.length);
+        $('#search-bar-input').setCursorPosition(searchString ? searchString.length : 0);
         $('#search-bar-input').focus();
 
         return this;
