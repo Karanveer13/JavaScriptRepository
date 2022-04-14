@@ -227,11 +227,11 @@ define([
       }
     },
     defaultRoute: function () {
-      // if (localStorage.getItem("expenser-token")) {
-      //   Backbone.history.navigate("/dashboard", true);
-      // } else {
-      //   this.redirectToLogin();
-      // }
+      if (localStorage.getItem("expenser-token")) {
+        Backbone.history.navigate("/dashboard", true);
+      } else {
+        this.redirectToLogin();
+      }
     },
   });
   return PMS.AppRouter;
