@@ -521,8 +521,48 @@
 	</script>
 	<script type="text/template" id="dashboard-template">
 		 <div id="dashboard">
-			<span>You are all Settled Up</span>
-			<i class="fa-solid fa-thumbs-up"></i>
+			<div id="all_group_balance">			 
+				<%this.model.get('balance').map(function(group_balance){%>
+				 
+					<div id="all-group-balance">
+						<div class="header">
+							<span><%=group_balance.group_name%> </span>
+						</div>
+						<div class="balance-container">
+							<table>
+								<tbody>
+								
+							<% group_balance.balances.forEach((tr) =>{
+								%>
+								<tr class="transaction">
+									<td class="party ower">
+										<i class="fa-solid fa-user"></i>
+										<span class=<%=tr.ower === PMS.fn.getUsername() ? 'highlight-ower' : '' %> >
+											<%= tr.ower %>
+										</span>
+									</td>
+									<td class="owes">OWES</td>
+									<td class="amount">
+										<%=tr.amount %>
+									</td>
+									<td class="owes">TO</td>
+									<td class="party lender">
+										<i class="fa-solid fa-user"></i>
+										<span class=<%=tr.lender === PMS.fn.getUsername() ? 'highlight-lender' : '' %>>
+											 <%= tr.lender %>
+										</span>
+									</td>
+								</tr>
+							<%})%>
+						</tbody>
+						</table>			 
+										 </div>
+										 
+					</div>
+				<%})%>
+			</div>
+			<!-- <span>You are all Settled Up</span>
+			<i class="fa-solid fa-thumbs-up"></i> -->
 		 </div>
 	</script>
 </body>

@@ -16,10 +16,11 @@ define([], function () {
       $(e).toggleClass("shocked");
      // $(PMS.friendsView.el).empty();
       PMS.sidebarView.selfRemove();
-      PMS.friendsView.$el.empty();
+      //PMS.friendsView.$el ?? PMS.friendsView.$el.empty();
+      this.selfRemove();
       localStorage.clear();
       Backbone.history.navigate("/logIn", true);
-      this.selfRemove();
+     
     },
     initialize: function () {
       if (localStorage.getItem("expenser-token")) {

@@ -7,7 +7,7 @@ define([
   "member_adder",
   "group_balance",
 ], function (friends, settlePayment, load) {
-    // var expense = {};
+  // var expense = {};
   // expense.collection = Backbone.Collection.extend({});
   // expense.view = Backbone.View.extend({
   //   el: $("#expense-content"),
@@ -42,17 +42,17 @@ define([
         memberList: _.map(PMS.groupsCollection.where({ id: current_group_id })[0].get('group_friends'), function (profile_friend) {
           console.log(profile_friend);
           var resource_uri = profile_friend.resource_uri;
-          var username = profile_friend.user.username;
+          var username = profile_friend.friend.user.username;
           console.log('username', profile_friend);
           return {
             resource_uri: resource_uri,
             username: username,
           }
         }),
-        friendList: _.map(_.reject(PMS.globals.profile_friends.models, function (friend) {
+        friendList: _.map(_.reject(PMS.globals.profile.attributes.profile_friends, function (friend) {
           console.log('friend', friend);
-          return (_.contains(_.pluck(PMS.fn.getCurrentGroupFriends(), 'resource_uri'), friend.get('resource_uri')));
-        }), function (friend) { return { resource_uri: friend.get('resource_uri'), username: friend.attributes.user.username ?? "" } }),
+          return (_.contains(_.mapObject(PMS.fn.getCurrentGroupFriends(), (obj) => obj.friend.resource_uri), friend.resource_uri));
+        }), function (friend) { return { resource_uri: friend.resource_uri, username: friend.user.username ?? "" } }),
 
 
       });
@@ -73,7 +73,7 @@ define([
       //   (group) => group.id == Backbone.history.location.hash.split("/")[1]
       // )[0].members,
 
-      PMS.memberAdderView = PMS.memberAdderView || new PMS.MemberAdderView({
+      PMS.memberAdderView = new PMS.MemberAdderView({
         model: PMS.memberAdderModel,
         el: $("#operation-view"),
       });
@@ -81,16 +81,16 @@ define([
     settlePayment: function (e) {
       e.preventDefault();
       console.log("settle Payment card");
-      
-      var currentReceiver = PMS.groupBalanceModel.attributes.transactions.filter((transaction) => transaction.ower == PMS.fn.getUsername()).length ? PMS.groupBalanceModel.attributes.transactions.filter((transaction) => transaction.ower == PMS.fn.getUsername())[0] : {}; 
+
+      var currentReceiver = PMS.groupBalanceModel.attributes.transactions.filter((transaction) => transaction.ower == PMS.fn.getUsername()).length ? PMS.groupBalanceModel.attributes.transactions.filter((transaction) => transaction.ower == PMS.fn.getUsername())[0] : {};
       var settlement_info = new settlePayment.model({
-        name: PMS.groupsCollection.where({resource_uri : `/group/${PMS.fn.getCurrentGroupId()}/`})[0].attributes.name,
+        name: PMS.groupsCollection.where({ resource_uri: `/group/${PMS.fn.getCurrentGroupId()}/` })[0].attributes.name,
         amount: PMS.groupBalanceModel.attributes.transactions.filter((transaction) => transaction.ower == PMS.fn.getUsername()).length ? PMS.groupBalanceModel.attributes.transactions.filter((transaction) => transaction.ower == PMS.fn.getUsername())[0].amount : 0,
         payer: PMS.fn.getUsername(),
-        currentReceiver : currentReceiver === {} ? {} : {
-          lender : currentReceiver.lender,
-          lender_profile : currentReceiver.lender_profile,
-          amount : currentReceiver.amount,
+        currentReceiver: currentReceiver === {} ? {} : {
+          lender: currentReceiver.lender,
+          lender_profile: currentReceiver.lender_profile,
+          amount: currentReceiver.amount,
         },
         receivers: _.filter(PMS.groupBalanceModel.attributes.transactions, (transaction) => transaction.ower === PMS.fn.getUsername()),
         //statements: [...PMS.GroupBalanceStatement.filter((stat) => true)],
@@ -114,7 +114,7 @@ define([
           friendList: _.map(PMS.fn.getCurrentGroupFriends(), function (friend) {
             return {
               resource_uri: friend.resource_uri,
-              username: friend.user.username,
+              username: friend.friend.user.username,
             }
           }),
           owner: "",
@@ -131,7 +131,7 @@ define([
       //  // PMS.ExpenseCreationView.unbindAll();
       // });
     },
-   
+
     renderExpenses: function () {
 
       _.map(PMS.globals.expenses.models, (expense) => {

@@ -80,7 +80,7 @@ define([
 
 
                 PMS.groupView = PMS.groupView || new PMS.view.GroupView();
-                
+
                 console.log(PMS.groupsCollection.models);
                 PMS.vent.trigger("friends:refresh");
                 _.map(PMS.groupsCollection.models, function (group) {
@@ -94,13 +94,13 @@ define([
                     PMS.groupView.render();
                     PMS.expenseCollectionView = new PMS.ExpenseCollectionView({ model: PMS.globals.expenses });
                     PMS.expenseCollectionView.render();
-                    PMS.friendsView =
-                      PMS.friendsView ||
-                      new PMS.FriendsView({
-                        model: new PMS.FriendsModel({
-                          friends: _.pluck(PMS.fn.getCurrentGroupFriends(PMS.fn.getCurrentGroupId()), 'user'),
-                        })
-                    });
+                    // PMS.friendsView =
+                    //   PMS.friendsView ||
+                    //   new PMS.FriendsView({
+                    //     model: new PMS.FriendsModel({
+                    //       friends: _.pluck(PMS.fn.getCurrentGroupFriends(PMS.fn.getCurrentGroupId()), 'user'),
+                    //     })
+                    //   });
 
 
                     // if (PMS.hasOwnProperty('expenseCollectionView')) {
@@ -199,7 +199,7 @@ define([
       //     el: $("#group-list"),
       //   });
 
-      return Promise.all([PMS.groupsCollection.fetch(),PMS.globals.expenses.fetch()]);
+      return Promise.all([PMS.groupsCollection.fetch(), PMS.globals.expenses.fetch()]);
     },
 
     redirectToLogin: function () {
@@ -208,9 +208,20 @@ define([
 
     dashboard: function () {
       if (this.checkIfLogin()) {
-        console.log("you are at dashboard");
-        new dashboardView().render();
-        this.initializeModels();
+        this.initializeModels()
+        .then((res) =>
+        {
+          console.log("you are at dashboard");
+          var balances = PMS.fn.getAllGroupBalances();
+          PMS.globals.group_balances = new PMS.models.group_balance({
+              balance : balances,
+          }); 
+          PMS.globals.allGroupBalance_view = new dashboardView({
+            model :  PMS.globals.group_balances
+          })
+          PMS.globals.allGroupBalance_view.render();
+        })
+       
       } else {
         this.redirectToLogin();
       }

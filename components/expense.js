@@ -60,10 +60,22 @@ define([], function () {
       render: function () {
         console.log(this.model);
         this.$el.html(this.template(this.model.toJSON()));
+        if (!_.contains(this.model.get('settled_by'), PMS.fn.getCurrentGroupFriends().find((friend) => friend.friend.resource_uri === PMS.globals.profile.attributes.profile_friends.find((friend) => friend.user.username === PMS.fn.getUsername()).resource_uri).resource_uri)) {
+          if (this.model.get('splitters').find((splitter) => splitter.e_splitter.friend.user.username === PMS.fn.getUsername())) {
+            console.log('check', this.model);
+            this.$('.expense-header').toggleClass("not_settled");
+          }
+          else {
+            
+          }
+        }
+        else{
+          this.$('.expense-header').toggleClass("settled");
+        }
         // console.log(this.model.get('reason'),!_.contains(this.model.get('settled_by'), PMS.globals.group_friends.find((friend) => friend.attributes.friend.user.resource_uri === PMS.globals.profile.attributes.profile_user).attributes.resource_uri))
         // if(!_.contains(this.model.get('settled_by'), PMS.globals.group_friends.find((friend) => friend.attributes.friend.user.resource_uri === PMS.globals.profile.attributes.profile_user).attributes.resource_uri))
         // {
-         
+
         // }
         //this.$('.expense-header').addClass(!_.contains(this.model.get('settled_by'), PMS.globals.group_friends.find((friend) => friend.attributes.friend.user.resource_uri === PMS.globals.profile.attributes.profile_user).attributes.resource_uri) ? "not_settled" : "settled");
         return this;

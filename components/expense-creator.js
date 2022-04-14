@@ -123,61 +123,93 @@ define(["expense"], function (expense) {
           },
         ]);
       });
-    }, 
-     
+    },
+
     addExpense: function (e) {
       e.preventDefault();
       console.log(this.model);
       var self = this;
       var splitters = [];
-      PMS.fn.getAllGroupMembers()
-        .then((res) => res.json())
+      PMS.fn.get
+
+      _.map(self.model.get('record'), function (record) {
+        splitters.push({
+          resource_uri: record.resource_uri,
+          amount: record.amount
+        })
+      });
+      PMS.globals.expenses.add({
+        amount: self.model.get('amount'),
+        group: `/group/${PMS.fn.getCurrentGroupId()}/`,
+        payer: this.model.get('owner'),
+        reason: self.model.get('name'),
+        splitters: [],
+        created_at: new Date(),
+      });
+      _.first(PMS.globals.expenses.models).save()
         .then(function (res) {
-          console.log(res.objects.find((friend) => friend.friend.resource_uri === self.model.get('owner')));
-
-          _.map(self.model.get('record'), function (record) {
-            console.log('record', record);
-            console.log('resource_uri', res.objects.find(function (friend) {
-              return friend.friend.resource_uri === record.resource_uri
-            }));
-            splitters.push({
-              resource_uri: res.objects.find(function (friend) {
-                return friend.friend.resource_uri === record.resource_uri
-              }).resource_uri, amount: record.amount
-            });
-          });
-
-          return res.objects.find(function (friend) { return friend.friend.resource_uri === self.model.get('owner') }).resource_uri;
-
-        })
-        .then(function (group_friend_owner) {
-          console.log('splitters', splitters);
-          PMS.globals.expenses.add({
-            amount: self.model.get('amount'),
-            group: `/group/${PMS.fn.getCurrentGroupId()}/`,
-            payer: group_friend_owner,
-            reason: self.model.get('name'),
-            splitters: [],
-            created_at: new Date(),
-          });
-          _.first(PMS.globals.expenses.models).save()
-            .then(function (res) {
-              console.log('saved');
-              console.log(res);
-              PMS.fn.addSplitterForGroup(res.resource_uri, splitters)
+          console.log('saved');
+          console.log(res);
+          PMS.fn.addSplitterForGroup(res.resource_uri, splitters)
+            .then((res) => {
+              console.log('all request fetched');
+              PMS.globals.splitters.fetch()
+                .then((res) => PMS.globals.expenses.fetch())
                 .then((res) => {
-                  console.log('all request fetched');
-                  PMS.globals.splitters.fetch()
-                    .then((res) => PMS.globals.expenses.fetch())
-                    .then((res) => {
-                      PMS.expenseCollectionView.render();
-                      self.close()
-                    });
+                  PMS.expenseCollectionView.render();
+                  self.close()
                 });
-
             });
 
-        })
+        });
+      // PMS.fn.getAllGroupMembers()
+      //   .then((res) => res.json())
+      //   .then(function (res) {
+      //     console.log(res.objects.find((friend) => friend.friend.resource_uri === self.model.get('owner')));
+
+      //     _.map(self.model.get('record'), function (record) {
+      //       console.log('record', record);
+      //       console.log('resource_uri', res.objects.find(function (friend) {
+      //         return friend.friend.resource_uri === record.resource_uri
+      //       }));
+      //       splitters.push({
+      //         resource_uri: res.objects.find(function (friend) {
+      //           return friend.friend.resource_uri === record.resource_uri
+      //         }).resource_uri, amount: record.amount
+      //       });
+      //     });
+
+      //     return res.objects.find(function (friend) { return friend.friend.resource_uri === self.model.get('owner') }).resource_uri;
+
+      //   })
+      //   .then(function (group_friend_owner) {
+      //     console.log('splitters', splitters);
+      //     PMS.globals.expenses.add({
+      //       amount: self.model.get('amount'),
+      //       group: `/group/${PMS.fn.getCurrentGroupId()}/`,
+      //       payer: group_friend_owner,
+      //       reason: self.model.get('name'),
+      //       splitters: [],
+      //       created_at: new Date(),
+      //     });
+      //     _.first(PMS.globals.expenses.models).save()
+      //       .then(function (res) {
+      //         console.log('saved');
+      //         console.log(res);
+      //         PMS.fn.addSplitterForGroup(res.resource_uri, splitters)
+      //           .then((res) => {
+      //             console.log('all request fetched');
+      //             PMS.globals.splitters.fetch()
+      //               .then((res) => PMS.globals.expenses.fetch())
+      //               .then((res) => {
+      //                 PMS.expenseCollectionView.render();
+      //                 self.close()
+      //               });
+      //           });
+
+      //       });
+
+      //   })
 
       // console.log("added expense");
       // console.log(3, PMS.expenseCollection);

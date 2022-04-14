@@ -19,7 +19,7 @@ Backbone.ajax = function () {
 //     p_friend : '/user/81/'
 // })
 // _.last(PMS.globals.profile_friends.models).save();
-PMS.constants.MONTHNAMES = ["January","February","March","April","May","June", "July","August","September","October","November","December"];
+PMS.constants.MONTHNAMES = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 PMS.models.profile_friend = Backbone.Model.extend({
     defaults: {
 
@@ -115,13 +115,13 @@ PMS.models.expense = Backbone.Model.extend({
 
 PMS.collections.expenses = Backbone.Collection.extend({
     model: PMS.models.expense,
-    comparator : function(a,b){
-        return b.get('created_at') > a.get('created_at') ? 1 : -1 ;
-      
+    comparator: function (a, b) {
+        return b.get('created_at') > a.get('created_at') ? 1 : -1;
+
     },
 
     initialize: function () {
-        
+
     },
     parse: function (response, options) {
         console.log(response);
@@ -133,41 +133,37 @@ PMS.collections.expenses = Backbone.Collection.extend({
 //Splitterss
 
 PMS.models.splitter = Backbone.Model.extend({
-    defaults : {
+    defaults: {
 
     }
 });
 PMS.collections.splitters = Backbone.Collection.extend({
-    model : PMS.models.splitter,
-    initialize : function()
-    {
+    model: PMS.models.splitter,
+    initialize: function () {
         this.fetch();
     },
-    parse : function(response,options)
-    {
+    parse: function (response, options) {
         console.log(response);
         return response.objects;
     },
-    url : `https://expenser-app-django-heroku.herokuapp.com/expense_splitter/`
+    url: `https://expenser-app-django-heroku.herokuapp.com/expense_splitter/`
 });
 
 //Group Friends
 
 PMS.models.group_friend = Backbone.Model.extend({
-    defaults : {}
+    defaults: {}
 });
 
 PMS.collections.group_friends = Backbone.Collection.extend({
-    model : PMS.models.group_friend,
-    initialize : function()
-    {
+    model: PMS.models.group_friend,
+    initialize: function () {
         this.fetch();
     },
-    parse : function(response)
-    {
+    parse: function (response) {
         return response.objects;
-    }, 
-    url : 'https://expenser-app-django-heroku.herokuapp.com/group_friend/'
+    },
+    url: 'https://expenser-app-django-heroku.herokuapp.com/group_friend/'
 });
 
 //Settle
@@ -177,15 +173,27 @@ PMS.models.settlement = Backbone.Model.extend({
     }
 })
 PMS.collections.settlements = Backbone.Collection.extend({
-    model : PMS.models.settlement,
-    initialize : function()
-    {
+    model: PMS.models.settlement,
+    initialize: function () {
         this.fetch();
     },
-    parse : function(response)
-    {
+    parse: function (response) {
         return response.objects;
-    }, 
-    url : 'https://expenser-app-django-heroku.herokuapp.com/settle/'
+    },
+    url: 'https://expenser-app-django-heroku.herokuapp.com/settle/'
 
 });
+
+//All Group Balance
+PMS.models.group_balance =  Backbone.Model.extend({
+    defaults: {
+
+    }
+});
+PMS.collections.all_group_balances =  Backbone.Collection.extend({
+    model: PMS.models.group_balance,
+    initialize: function () {
+
+    },
+
+})
