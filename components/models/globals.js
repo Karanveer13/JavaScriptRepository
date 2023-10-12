@@ -36,7 +36,7 @@ PMS.collections.profile_friends = Backbone.Collection.extend({
     parse: function (response, options) {
         return response.objects;
     },
-    url: 'https://expenser-app-django-heroku.herokuapp.com/profile_friend/'
+    url: 'https://expenser-app.onrender.com/profile_friend/'
 })
 //Profile 
 PMS.models.profile = Backbone.Model.extend({
@@ -49,7 +49,7 @@ PMS.models.profile = Backbone.Model.extend({
         console.log(options);
         return response.objects[0];
     },
-    urlRoot: 'https://expenser-app-django-heroku.herokuapp.com/profile/',
+    urlRoot: 'https://expenser-app.onrender.com/profile/',
 
 })
 
@@ -64,7 +64,7 @@ PMS.models.user = Backbone.Model.extend({
 })
 PMS.collections.users = Backbone.Collection.extend({
     model: PMS.models.user,
-    url: "https://expenser-app-django-heroku.herokuapp.com/user/",
+    url: "https://expenser-app.onrender.com/user/",
     initialize: function () {
         this.fetch();
     },
@@ -90,7 +90,7 @@ PMS.collections.groups = Backbone.Collection.extend({
         console.log(options);
         return response.objects;
     },
-    url: 'https://expenser-app-django-heroku.herokuapp.com/group/',
+    url: 'https://expenser-app.onrender.com/group/',
 });
 
 //Expenses
@@ -127,7 +127,7 @@ PMS.collections.expenses = Backbone.Collection.extend({
         console.log(response);
         return response.objects;
     },
-    url: `https://expenser-app-django-heroku.herokuapp.com/expense/`
+    url: `https://expenser-app.onrender.com/expense/`
 })
 
 //Splitterss
@@ -146,7 +146,7 @@ PMS.collections.splitters = Backbone.Collection.extend({
         console.log(response);
         return response.objects;
     },
-    url: `https://expenser-app-django-heroku.herokuapp.com/expense_splitter/`
+    url: `https://expenser-app.onrender.com/expense_splitter/`
 });
 
 //Group Friends
@@ -163,7 +163,7 @@ PMS.collections.group_friends = Backbone.Collection.extend({
     parse: function (response) {
         return response.objects;
     },
-    url: 'https://expenser-app-django-heroku.herokuapp.com/group_friend/'
+    url: 'https://expenser-app.onrender.com/group_friend/'
 });
 
 //Settle
@@ -180,7 +180,7 @@ PMS.collections.settlements = Backbone.Collection.extend({
     parse: function (response) {
         return response.objects;
     },
-    url: 'https://expenser-app-django-heroku.herokuapp.com/settle/'
+    url: 'https://expenser-app.onrender.com/settle/'
 
 });
 

@@ -25,7 +25,7 @@ PMS.fn = {
         var self = this;
         _.map(added_friend, function (member) {
 
-            add_requests.push(fetch(`https://expenser-app-django-heroku.herokuapp.com/group_friend/`, {
+            add_requests.push(fetch(`https://expenser-app.onrender.com/group_friend/`, {
                 method: "POST",
                 headers: PMS.fn.getAuthHeaders(),
                 body: JSON.stringify({
@@ -41,7 +41,7 @@ PMS.fn = {
         });
         _.map(removed_friend, function (member) {
             remove_requests.push(
-                fetch(`https://expenser-app-django-heroku.herokuapp.com${member.resource_uri}`, {
+                fetch(`https://expenser-app.onrender.com${member.resource_uri}`, {
                     method: "DELETE",
                     headers: PMS.fn.getAuthHeaders(),
 
@@ -58,7 +58,7 @@ PMS.fn = {
             method: 'GET',
             headers: this.getAuthHeaders(),
         };
-        return fetch("https://expenser-app-django-heroku.herokuapp.com/expense_splitter/", requestOptions);
+        return fetch("https://expenser-app.onrender.com/expense_splitter/", requestOptions);
 
     },
     addSplitterForGroup: function (expense_id, splitters) {
@@ -297,7 +297,7 @@ PMS.fn = {
         return PMS.groupsCollection.where({ resource_uri: id })[0].get('group_friends');
     },
     getAllGroupMembers: function () {
-        return fetch('https://expenser-app-django-heroku.herokuapp.com/group_friend/', {
+        return fetch('https://expenser-app.onrender.com/group_friend/', {
             method: "GET",
             headers: PMS.fn.getAuthHeaders(),
         })
@@ -307,14 +307,14 @@ PMS.fn = {
         return parseInt(Backbone.history.location.hash.split("/")[1]);
     },
     getGroupMembers: function () {
-        return fetch(`https://expenser-app-django-heroku.herokuapp.com/group_friend/`, {
+        return fetch(`https://expenser-app.onrender.com/group_friend/`, {
             method: "GET",
             headers: PMS.fn.getAuthHeaders(),
         });
     },
     removeGroupMember: function (removed_friend, profile_friend_id) {
 
-        return fetch(`https://expenser-app-django-heroku.herokuapp.com/group_friend/${profile_friend_id}`, {
+        return fetch(`https://expenser-app.onrender.com/group_friend/${profile_friend_id}`, {
             method: "DELETE",
             headers: getAuthHeaders(),
 
@@ -324,7 +324,7 @@ PMS.fn = {
         return PMS.groupsCollection.where({ id: current_group_id })[0].get('group_friends')
     },
     getProfile: function () {
-        fetch(`https://expenser-app-django-heroku.herokuapp.com/profile/`, {
+        fetch(`https://expenser-app.onrender.com/profile/`, {
             method: "GET",
             headers: getAuthHeaders(),
         })

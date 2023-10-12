@@ -50,7 +50,7 @@ define([], function () {
       if (true) {
         let email = this.model.get("email");
         let password = this.model.get("password");
-        fetch("https://expenser-app-django-heroku.herokuapp.com/signin/", {
+        fetch("https://expenser-app.onrender.com/signin/", {
           method: "POST",
           mode: "cors",
           headers: {
