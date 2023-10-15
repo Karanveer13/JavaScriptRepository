@@ -30,7 +30,7 @@ define([], function () {
       this.model.set(e.target.name, e.target.value);
     },
     createProfile: function (id) {
-      fetch(`https://expenser-app-django-heroku.herokuapp.com/profile`, {
+      fetch(`https://expenser-app.onrender.com/profile`, {
         method: "POST",
         headers: PMS.fn.getAuthHeaders(),
         body: JSON.stringify({
@@ -49,7 +49,7 @@ define([], function () {
         let username = this.model.get("username");
         let first_name = this.model.get("first_name");
         let last_name = this.model.get("last_name");
-        fetch("https://expenser-app-django-heroku.herokuapp.com/signup/", {
+        fetch("https://expenser-app.onrender.com/signup/", {
           method: "POST",
           mode: "cors",
           headers: {
